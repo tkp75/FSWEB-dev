@@ -1,0 +1,7 @@
+
+Selain->+Palvelin: POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+Palvelin-->-Selain: Status 201 Created
+
+note left of Selain
+Uusi muistio lähetetty ja sivu päivitetty
+end note

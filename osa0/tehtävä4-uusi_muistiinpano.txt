@@ -1,0 +1,37 @@
+
+Selain->+Palvelin: POST https://fullstack-exampleapp.herokuapp.com/notes
+Palvelin-->-Selain: Status 302 Found
+
+note left of Selain
+Uusi muistiinpano lähetetty (ja tallennettu),
+selain lähtee seuraamaan uudelleenohjausta.
+end note
+
+Selain->+Palvelin: GET https://fullstack-exampleapp.herokuapp.com/notes
+Palvelin-->-Selain: Status 200 OK
+
+note left of Selain
+HTML-sivun runko ladattu
+end note
+
+Selain->+Palvelin: GET https://fullstack-exampleapp.herokuapp.com/main.css
+Palvelin-->-Selain: Status 200 OK
+
+note left of Selain
+HTML-sivun tyylitiedosto ladattu
+end note
+
+Selain->+Palvelin: GET https://fullstack-exampleapp.herokuapp.com/main.js
+Palvelin-->-Selain: Status 200 OK
+
+note left of Selain
+HTML-sivun Javaskriptitiedosto ladattu
+end note
+
+Selain->+Palvelin: GET https://fullstack-exampleapp.herokuapp.com/data.json
+Palvelin-->-Selain: Status 200 OK
+
+note left of Selain
+JSON-datatiedosto ladattu,
+javaskripti lisää sivulle listan muistiinpanoista.
+end note
