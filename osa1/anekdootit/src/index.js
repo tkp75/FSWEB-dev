@@ -11,14 +11,36 @@ const App = (props) => {
     setVotes(newVotes)
   }
 
+  const indexOfMax = (arr) => {
+    if (arr.length === 0) {
+      return -1;
+    }
+
+    var max = arr[0];
+    var maxIndex = 0;
+
+    for (var i = 1; i < arr.length; i++) {
+      if (arr[i] > max) {
+        maxIndex = i;
+        max = arr[i];
+      }
+    }
+
+    return maxIndex;
+  }
+
   const handleNextClick = () => setSelected(Math.floor(Math.random()*anecdotes.length))
 
   return (
     <div>
+      <h2>Anecdote of the day</h2>
       <p>{props.anecdotes[selected]}</p>
       <p>has {votes[selected]} votes</p>
       <button onClick={handleVoteClick} >vote</button>
       <button onClick={handleNextClick} >next anecdote</button>
+      <h2>Anecdote with most votes</h2>
+      <p>{props.anecdotes[indexOfMax(votes)]}</p>
+      <p>has {votes[indexOfMax(votes)]} votes</p>
     </div>
   )
 }
