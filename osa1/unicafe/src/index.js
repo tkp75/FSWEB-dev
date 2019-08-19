@@ -7,16 +7,14 @@ const Button = ({handleClick, text}) => <button onClick={handleClick} >{text}</b
 
 const Statistics = ({good, neutral, bad}) => {
   const all = good + neutral + bad
-  const average = all !== 0 ? (good - bad) / all : 0
-  const positive = all !== 0 ? 100 * good / all : 0
   return (
     <ul style={{listStyleType: "none", padding: 0}}>
       <li>good {good}</li>
       <li>neutral {neutral}</li>
       <li>bad {bad}</li>
       <li>all {all}</li>
-      <li>average {average}</li>
-      <li>positive {positive} %</li>
+      <li>average {all !== 0 ? (good - bad) / all : 0}</li>
+      <li>positive {all !== 0 ? 100 * good / all : 0} %</li>
     </ul>
   );
 }
