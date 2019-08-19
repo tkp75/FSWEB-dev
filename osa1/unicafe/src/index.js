@@ -7,6 +7,7 @@ const Button = ({handleClick, text}) => <button onClick={handleClick} >{text}</b
 
 const Statistics = ({good, neutral, bad}) => {
   const all = good + neutral + bad
+  if (all === 0) return <p>No feedback given</p>
   return (
     <ul style={{listStyleType: "none", padding: 0}}>
       <li>good {good}</li>
