@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Unicafe",
+  "name": "Fullstack osa 1: Unicafe-sovellus",
   "icons": [
     {
       "src": "favicon.ico",
