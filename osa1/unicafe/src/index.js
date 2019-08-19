@@ -5,20 +5,22 @@ const Header = ({text}) => <h1>{text}</h1>
 
 const Button = ({handleClick, text}) => <button onClick={handleClick} >{text}</button>
 
-const Statistic = ({text, value, children})  => <li>{text} {value}{children}</li>
+const Statistic = ({text, value, children})  => <tr><td>{text}</td><td>{value}{children}</td></tr>
 
 const Statistics = ({good, neutral, bad}) => {
   const all = good + neutral + bad
   if (all === 0) return <p>No feedback given</p>
   return (
-    <ul style={{listStyleType: "none", padding: 0}}>
-      <Statistic text='good' value={good} />
-      <Statistic text='neutral' value={neutral} />
-      <Statistic text='bad' value={bad} />
-      <Statistic text='all' value={all} />
-      <Statistic text='average' value={all !== 0 ? (good - bad) / all : 0} />
-      <Statistic text='positive' value={all !== 0 ? 100 * good / all : 0} > %</Statistic>
-    </ul>
+    <table>
+      <tbody>
+        <Statistic text='good' value={good} />
+        <Statistic text='neutral' value={neutral} />
+        <Statistic text='bad' value={bad} />
+        <Statistic text='all' value={all} />
+        <Statistic text='average' value={all !== 0 ? (good - bad) / all : 0} />
+        <Statistic text='positive' value={all !== 0 ? 100 * good / all : 0} > %</Statistic>
+      </tbody>
+    </table>
   );
 }
 
