@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "kurssitiedot",
+  "name": "Fullstack osa 1: kurssitiedot-sovellus",
   "icons": [
     {
       "src": "favicon.ico",
