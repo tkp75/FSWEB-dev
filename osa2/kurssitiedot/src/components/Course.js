@@ -5,7 +5,7 @@ import Total from './Total'
 
 // Course
 const Course = (props) => {
-  console.log('Course: ',props)
+  //console.log('Course: ',props)
   return (
     <div>
       <Header
