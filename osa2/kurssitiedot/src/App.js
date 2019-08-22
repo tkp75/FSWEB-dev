@@ -1,6 +1,5 @@
 import React from 'react'
-import Course from './components/Course'
-import Header from './components/Header'
+import Course, { Header } from './components/Course'
 
 // App
 const App = () => {
