@@ -7,7 +7,7 @@ import Total from './Total'
 const Course = (props) => {
   //console.log('Course: ',props)
   return (
-    <div>
+    <>
       <Header
         name={props.course.name}
       />
@@ -17,7 +17,7 @@ const Course = (props) => {
       <Total
         parts={props.course.parts}
       />
-    </div>
+    </>
   )
 }
 
