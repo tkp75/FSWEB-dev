@@ -10,6 +10,7 @@ const Course = (props) => {
     <>
       <Header
         name={props.course.name}
+        level='2'
       />
       <Content
         parts={props.course.parts}

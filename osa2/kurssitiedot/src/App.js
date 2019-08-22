@@ -1,5 +1,6 @@
 import React from 'react'
 import Courses from './components/Courses'
+import Header from './components/Header'
 
 // App
 const App = () => {
@@ -46,7 +47,12 @@ const App = () => {
     }
   ]
 
-  return <Courses courses={courses} />
+  return (
+    <div>
+      <Header name='Web development curriculum' level='1' />
+      <Courses courses={courses} />
+    </div>
+  )
 }
 
 export default App

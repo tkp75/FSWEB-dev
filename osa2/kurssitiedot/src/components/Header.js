@@ -3,8 +3,10 @@ import React from 'react'
 // Header
 const Header = (props) => {
   //console.log('Header: ',props)
+  let Heading = 'h1'
+  if (props.level) Heading = 'h'+props.level
   return (
-    <h1>{props.name}</h1>
+    <Heading>{props.name}</Heading>
   )
 }
 
