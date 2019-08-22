@@ -1,5 +1,5 @@
 import React from 'react'
-import Courses from './components/Courses'
+import Course from './components/Course'
 import Header from './components/Header'
 
 // App
@@ -50,7 +50,7 @@ const App = () => {
   return (
     <div>
       <Header name='Web development curriculum' level='1' />
-      <Courses courses={courses} />
+      {courses.map((course,index) => <Course key={index} course={course} />)}
     </div>
   )
 }
