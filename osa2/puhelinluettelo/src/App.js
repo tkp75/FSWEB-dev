@@ -12,6 +12,8 @@ const App = () => {
     event.preventDefault()
     if(persons.find(person => person.name === newName) === undefined) {
       setPersons(persons.concat({ name: newName }))
+    } else {
+      alert(`${newName} is already added to phonebook`)
     }
     setNewName('')
   }
