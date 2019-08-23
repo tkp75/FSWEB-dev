@@ -1,5 +1,55 @@
 import React, { useState } from 'react'
 
+const Filter = (props) => {
+  return (
+    <div>
+      filter shown with:
+      <input
+        onChange={props.changeHandler}
+        value={props.value}
+      />
+    </div>
+  )
+}
+
+const PersonForm = (props) => {
+  return (
+    <form>
+      <div>
+        name:
+        <input
+          onChange={props.changeNameHandler}
+          value={props.name}
+        />
+      </div>
+      <div>
+        number:
+        <input
+          onChange={props.changeNumberHandler}
+          value={props.number}
+        />
+      </div>
+      <div>
+        <button
+          type="submit"
+          onClick={props.submitClickHandler}
+        >
+          add
+        </button>
+      </div>
+    </form>
+  )
+}
+
+const Persons = (props) => {
+  return (
+    <ul style={{listStyleType: "none", padding: 0}}>
+      {props.persons.filter(person => person.name.toLocaleUpperCase().includes(props.filter))
+        .map(person => <li key={person.name}>{person.name} {person.number}</li>)}
+    </ul>
+  )
+}
+
 const App = () => {
   const [ persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456' },
@@ -29,42 +79,20 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-          filter shown with:
-          <input
-            onChange={handleFilterChange}
-            value={newFilter}
-          />
-        </div>
-      <h2>add a new</h2>
-      <form>
-        <div>
-          name:
-          <input
-            onChange={handleNameChange}
-            value={newName}
-          />
-        </div>
-        <div>
-          number:
-          <input
-            onChange={handleNumberChange}
-            value={newNumber}
-          />
-        </div>
-        <div>
-          <button
-            type="submit"
-            onClick={handleSubmitClick}
-          >
-            add
-          </button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <ul style={{listStyleType: "none", padding: 0}}>
-        {persons.filter(person => person.name.toLocaleUpperCase().includes(newFilter.toLocaleUpperCase())).map(person => <li key={person.name}>{person.name} {person.number}</li>)}
-      </ul>
+      <Filter
+        changeHandler={handleFilterChange}
+        value={newFilter}
+      />
+      <h3>add a new</h3>
+      <PersonForm
+        changeNameHandler={handleNameChange}
+        name={newName}
+        changeNumberHandler={handleNumberChange}
+        number={newNumber}
+        submitClickHandler={handleSubmitClick}
+      />
+      <h3>Numbers</h3>
+      <Persons persons={persons} filter={newFilter.toLocaleUpperCase()} />
     </div>
   )
 
