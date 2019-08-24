@@ -19,13 +19,50 @@ const Countries = (props) => {
       country => country.name.toLocaleUpperCase().includes(props.filter)
     )
 //console.log('Filtered countries:',filteredCountries)
-  if (filteredCountries.length < 1)  return null
+  if (filteredCountries.length < 1) return null
+  if (filteredCountries.length === 1) return <Country country={filteredCountries[0]} />
   if (filteredCountries.length > 10) return "Too many matches, specify another filter"
   return (
     <div className="Countries">
       <ul style={{listStyleType: "none", padding: 0}}>
         {filteredCountries.map(country => <li key={country.cioc}>{country.name}</li>)}
       </ul>
+    </div>
+  )
+}
+
+const Country = (props) => {
+  return (
+    <div className="Country">
+      <ul style={{listStyleType: "none", padding: 0}}>
+        <li ><h2>{props.country.name}</h2></li>
+        <li >capital {props.country.capital}</li>
+        <li >population {props.country.population}</li>
+        <Languages languages={props.country.languages} />
+        <Flag url={props.country.flag} />
+      </ul>
+    </div>
+  )
+}
+
+const Languages = (props) => {
+  return (
+    <div className="Languages">
+      <li><b>languages</b>
+        <ul style={{listStyleType: "disc", paddingLeft: "32px"}}>
+          {props.languages.map(language => <li key={language.name}>{language.name}</li>)}
+        </ul>
+      </li>
+    </div>
+  )
+}
+
+const Flag = (props) => {
+  return (
+    <div className="Flag">
+      <li>
+        <img src={props.url} alt="flag" style={{width: 128, height: "auto"}}/>
+      </li>      
     </div>
   )
 }
