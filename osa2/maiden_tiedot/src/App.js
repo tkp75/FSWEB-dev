@@ -25,7 +25,13 @@ const Countries = (props) => {
   return (
     <div className="Countries">
       <ul style={{listStyleType: "none", padding: 0}}>
-        {filteredCountries.map(country => <li key={country.cioc}>{country.name}</li>)}
+        {filteredCountries.map(
+          country =>
+          <li key={country.cioc}>
+            {country.name}
+            <button onClick={props.showClickHandler}>show</button>
+          </li>
+        )}
       </ul>
     </div>
   )
@@ -79,7 +85,12 @@ const App = () => {
         setCountries(response.data)
       })
   }, [])
-  
+
+  const handleShowClick = (event) => {
+//  console.log(event.target.previousSibling)
+    setNewFilter(event.target.previousSibling.textContent)
+  }
+
   return (
     <div className="App">
       <Filter
@@ -89,6 +100,7 @@ const App = () => {
       <Countries
         countries={countries}
         filter={newFilter.toLocaleUpperCase()}
+        showClickHandler={handleShowClick}
       />
     </div>
   );
