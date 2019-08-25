@@ -13,6 +13,7 @@
 
 # editors
 *.swp
+*.orig
 
 # misc
 .DS_Store
