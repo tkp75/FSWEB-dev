@@ -46,8 +46,20 @@ const Persons = (props) => {
   return (
     <ul style={{listStyleType: "none", padding: 0}}>
       {props.persons.filter(person => person.name.toLocaleUpperCase().includes(props.filter))
-        .map(person => <li key={person.name}>{person.name} {person.number}</li>)}
+        .map(person =>
+          <li key={person.name}>
+            {person.name} {person.number}
+            <DeleteButton id={person.id} deleteClickHandler={props.deleteClickHandler} />
+          </li>
+        )
+      }
     </ul>
+  )
+}
+
+const DeleteButton = (props) => {
+  return (
+    <button id={props.id} onClick={props.deleteClickHandler}>delete</button>
   )
 }
 
@@ -80,6 +92,21 @@ const App = () => {
     }
   }
 
+  const handleDeleteClick = (event) => {
+    const personId = parseInt(event.target.getAttribute('id'),10)
+    personService.remove(personId)
+      .then(returnedPerson => {
+        console.log('pre delete:',persons)
+        console.log('delete person id:'+personId)
+        setPersons(persons.filter(person => person.id !== personId))
+        console.log('post delete:',persons)
+      })
+      .catch(error => {
+        console.log(error)
+        alert(`Could not delete person #${personId} from server`)
+      })      
+}
+
   useEffect(() => {
     personService.getAll()
       .then(returnedPersons => {
@@ -107,7 +134,11 @@ const App = () => {
         submitClickHandler={handleSubmitClick}
       />
       <h3>Numbers</h3>
-      <Persons persons={persons} filter={newFilter.toLocaleUpperCase()} />
+      <Persons
+        persons={persons}
+        filter={newFilter.toLocaleUpperCase()}
+        deleteClickHandler={handleDeleteClick}
+      />
     </div>
   )
 
