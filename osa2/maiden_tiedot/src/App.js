@@ -106,13 +106,13 @@ const App = () => {
 
   // MISC
   // - get weather information from internet
-  // TODO: make this unblocking
-  const fetchWeather = (city) => {
+  const fetchWeather = async(city) => {
     axios
       .get('https://api.apixu.com/v1/current.json?key=de71cbf233b0425ba6a91331192508&q='+city)
       .then(response => {
         setWeather(response.data)
       }).catch(error => {
+        setWeather([])
         console.log(error)
         return null
     })
@@ -149,11 +149,14 @@ const App = () => {
   // EFFECT
   // - get countries
   useEffect(() => {
+    const apiURL='https://restcountries.eu/rest/v2/all'
     axios
-      .get('https://restcountries.eu/rest/v2/all')
+      .get(apiURL)
       .then(response => {
         setCountries(response.data)
       }).catch(error => {
+        alert('Could not fetch country data from "'+apiURL
+          +'"!\nPlease check internet connection and refresh the page.')
         console.log(error)
         return null
     })
