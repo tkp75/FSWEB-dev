@@ -62,14 +62,21 @@ const App = () => {
   const handleFilterChange = (event) => setNewFilter(event.target.value)
 
   const handleSubmitClick = (event) => {
-    event.preventDefault()
+    event.preventDefault() 
     if(persons.find(person => person.name === newName) === undefined) {
-      setPersons(persons.concat({ name: newName, number: newNumber }))
-    } else {
+      axios.post('http://localhost:3001/persons', { name: newName, number: newNumber })
+        .then(response => {
+          setPersons(persons.concat(response.data))
+          setNewName('')
+          setNewNumber('')
+        })
+        .catch(error => {
+          alert(`Could not save '${newName}' to server`)
+          setPersons(persons.filter(person => person.name !== newName))
+        })      
+      } else {
       alert(`${newName} is already added to phonebook`)
     }
-    setNewName('')
-    setNewNumber('')
   }
 
   useEffect(() => {
