@@ -48,7 +48,7 @@ const Persons = (props) => {
       {props.persons.filter(person => person.name.toLocaleUpperCase().includes(props.filter))
         .map(person =>
           <li key={person.name}>
-            {person.name} {person.number}
+            {person.name} {person.number}&nbsp;
             <DeleteButton id={person.id} deleteClickHandler={props.deleteClickHandler} />
           </li>
         )
@@ -93,19 +93,23 @@ const App = () => {
   }
 
   const handleDeleteClick = (event) => {
-    const personId = parseInt(event.target.getAttribute('id'),10)
-    personService.remove(personId)
-      .then(returnedPerson => {
-        console.log('pre delete:',persons)
-        console.log('delete person id:'+personId)
-        setPersons(persons.filter(person => person.id !== personId))
-        console.log('post delete:',persons)
-      })
-      .catch(error => {
-        console.log(error)
-        alert(`Could not delete person #${personId} from server`)
-      })      
-}
+    const id = parseInt(event.target.getAttribute('id'),10)
+    const person = persons.find(person => person.id === id)
+    if (!isFinite(id) || person === undefined) {
+      console.log(`handleDeleteClick: invalid id '${id}' or person (${person})`)
+      return
+    }
+    if (window.confirm(`Delete ${person.name}?`)) {
+      personService.remove(person.id)
+        .then(returnedPerson => setPersons(persons.filter(p => p.id !== person.id)))
+        .catch(error => {
+          console.log('handleDeleteClick:',error)
+          alert(`Could not delete person with id '${id}' (name=${person.name}) from server`)
+        })
+    } else {
+      console.log(`handleDeleteClick: skipping deletion of person with id '${id}' (name=${person.name})`)
+    }
+  }
 
   useEffect(() => {
     personService.getAll()
