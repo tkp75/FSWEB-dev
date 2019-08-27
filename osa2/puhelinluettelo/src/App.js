@@ -63,11 +63,33 @@ const DeleteButton = (props) => {
   )
 }
 
+const Notification = ({ notification }) => {
+  if (notification === null) {
+    return null
+  }
+  const notificationStyle = {
+    padding: 10,
+    marginBottom: 10,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    background: 'lightgrey',
+    color: 'green',
+    fontStyle: 'bold',
+    fontSize: 20
+  }
+  return (
+    <div className="notification" style={notificationStyle}>
+      {notification}
+    </div>
+  )
+}
+
 const App = () => {
   const [ persons, setPersons] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newFilter, setNewFilter ] = useState('')
+  const [ notification, setNotification ] = useState(null)
 
   const handleNameChange = (event) => setNewName(event.target.value)
   const handleNumberChange = (event) => setNewNumber(event.target.value)
@@ -77,6 +99,7 @@ const App = () => {
     event.preventDefault()
     let newPersons = [...persons]
     const person = newPersons.find(p => p.name === newName)
+    let message = `Added ${newName}`
     // Delete person if already exist and user agrees
     if( person !== undefined) {
       if (!window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
@@ -90,20 +113,24 @@ const App = () => {
         return
       })
       newPersons = newPersons.filter(p => p.id !== person.id)
+      message = `Updated ${newName}`
     }
     // Create user with number
     personService.create({ name: newName, number: newNumber })
       .then(returnedPerson => {
         setPersons(newPersons.concat(returnedPerson))
-        setNewName('')
-        setNewNumber('')
       })
       .catch(error => {
         console.log('handleSubmitClick:',error)
         alert(`Could not save '${newName}' to server with number '${newNumber}'`)
         setPersons(newPersons)
-      })      
-  }
+        return
+      })
+    setNotification(message)
+    setNewName('')
+    setNewNumber('')
+    setTimeout(() => setNotification(null), 5000)
+}
 
   const handleDeleteClick = (event) => {
     const id = parseInt(event.target.getAttribute('id'),10)
@@ -118,10 +145,14 @@ const App = () => {
         .catch(error => {
           console.log('handleDeleteClick:',error)
           alert(`Could not delete person with id '${person.id}' (name=${person.name}) from server`)
+          return
         })
     } else {
       console.log(`handleDeleteClick: skipping deletion of person with id '${person.id}' (name=${person.name})`)
+      return
     }
+    setNotification(`Deleted ${person.name}`)
+    setTimeout(() => setNotification(null), 5000)
   }
 
   useEffect(() => {
@@ -138,6 +169,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification notification={notification} />
       <Filter
         changeHandler={handleFilterChange}
         value={newFilter}
