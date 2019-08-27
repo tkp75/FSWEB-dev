@@ -74,22 +74,35 @@ const App = () => {
   const handleFilterChange = (event) => setNewFilter(event.target.value)
 
   const handleSubmitClick = (event) => {
-    event.preventDefault() 
-    if(persons.find(person => person.name === newName) === undefined) {
-      personService.create({ name: newName, number: newNumber })
-        .then(returnedPerson => {
-          setPersons(persons.concat(returnedPerson))
-          setNewName('')
-          setNewNumber('')
-        })
-        .catch(error => {
-          console.log(error)
-          alert(`Could not save '${newName}' to server`)
-          setPersons(persons.filter(person => person.name !== newName))
-        })      
-      } else {
-      alert(`${newName} is already added to phonebook`)
+    event.preventDefault()
+    let newPersons = [...persons]
+    const person = newPersons.find(p => p.name === newName)
+    // Delete person if already exist and user agrees
+    if( person !== undefined) {
+      if (!window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        console.log(`handleSubmitClick: ${newName} is already added to phonebook and not replacing the number`)
+        return
+      }
+      personService.remove(person.id)
+      .catch(error => {
+        console.log('handleSubmitClick:',error)
+        alert(`Could not delete '${newName}' from server with id ${person.id}`)
+        return
+      })
+      newPersons = newPersons.filter(p => p.id !== person.id)
     }
+    // Create user with number
+    personService.create({ name: newName, number: newNumber })
+      .then(returnedPerson => {
+        setPersons(newPersons.concat(returnedPerson))
+        setNewName('')
+        setNewNumber('')
+      })
+      .catch(error => {
+        console.log('handleSubmitClick:',error)
+        alert(`Could not save '${newName}' to server with number '${newNumber}'`)
+        setPersons(newPersons)
+      })      
   }
 
   const handleDeleteClick = (event) => {
