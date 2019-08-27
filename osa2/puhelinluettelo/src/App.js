@@ -96,7 +96,11 @@ const App = () => {
     const id = parseInt(event.target.getAttribute('id'),10)
     const person = persons.find(person => person.id === id)
     if (!isFinite(id) || person === undefined) {
+<<<<<<< HEAD
       alert(`Could not delete person with id '${id}' or person (${person}) not defined`)
+=======
+      console.log(`handleDeleteClick: invalid id '${id}' or person (${person})`)
+>>>>>>> 5b6c9e1735d99ceb4ab930f589ed1b28a4e81fec
       return
     }
     if (window.confirm(`Delete ${person.name}?`)) {
@@ -104,10 +108,17 @@ const App = () => {
         .then(returnedPerson => setPersons(persons.filter(p => p.id !== person.id)))
         .catch(error => {
           console.log('handleDeleteClick:',error)
+<<<<<<< HEAD
           alert(`Could not delete person with id '${person.id}' (name=${person.name}) from server`)
         })
     } else {
       console.log(`handleDeleteClick: skipping deletion of person with id '${person.id}' (name=${person.name})`)
+=======
+          alert(`Could not delete person with id '${id}' (name=${person.name}) from server`)
+        })
+    } else {
+      console.log(`handleDeleteClick: skipping deletion of person with id '${id}' (name=${person.name})`)
+>>>>>>> 5b6c9e1735d99ceb4ab930f589ed1b28a4e81fec
     }
   }
 
