@@ -158,7 +158,7 @@ const App = () => {
 }
 
   const handleDeleteClick = (event) => {
-    const id = parseInt(event.target.getAttribute('id'),10)
+    const id = event.target.getAttribute('id')
     const person = persons.find(person => person.id === id)
     if (!isFinite(id) || person === undefined) {
       setMessage({text: `Failed deleting person with id '${id}'`, level: 2})
