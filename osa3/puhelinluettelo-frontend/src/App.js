@@ -186,7 +186,7 @@ const App = () => {
   useEffect(() => {
     personService.getAll()
       .then(returnedPersons => {
-        setPersons(returnedPersons)
+        setPersons(returnedPersons.sort((p1, p2) => p1.name > p2.name))
       })
       .catch(error => {
         console.log(error)
