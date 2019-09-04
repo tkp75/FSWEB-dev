@@ -119,39 +119,50 @@ const App = () => {
 
   const handleSubmitClick = (event) => {
     event.preventDefault()
+    if (!newName || !newNumber) {
+      setMessage({text: `Error, please fill in both name and number`, level: 1})
+      setTimeout(() => setMessage({level: -1}), 10000)
+      return
+    } 
     let newPersons = [...persons]
     const person = newPersons.find(p => p.name === newName)
-    let text = `Added '${newName}'`
-    // Delete person if already exist and user agrees
-    if( person !== undefined) {
+    if (person !== undefined) {
+      // Modify person if already exist and user agrees, cancel operation otherwise
       if (!window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
         setMessage({text: `Cancelled updating '${newName}'`, level: 1})
         setTimeout(() => setMessage({level: -1}), 10000)
         return
       }
-      personService.remove(person.id)
+      person.name = newName
+      person.number = newNumber
+      personService.modify(person)
+        .then(returnedPerson => {
+          setPersons(newPersons.filter(p => {
+            if (p.id === returnedPerson.id) return returnedPerson
+            return p
+          }))
+        })
       .catch(error => {
         console.log(error)
-        setMessage({text: `Failed removing '${newName}' during update`, level: 2})
+        setMessage({text: `Failed modifying '${newName}'`, level: 2})
         setTimeout(() => setMessage({level: -1}), 15000)
         return
-      })
-      newPersons = newPersons.filter(p => p.id !== person.id)
-      text = `Updated '${newName}'`
-    }
-    // Create user with number
-    personService.create({ name: newName, number: newNumber })
-      .then(returnedPerson => {
-        setPersons(newPersons.concat(returnedPerson))
-      })
-      .catch(error => {
-        console.log(error)
-        setMessage({text: `Failed creating '${newName}'`, level: 2})
-        setPersons(newPersons)
-        setTimeout(() => setMessage({level: -1}), 15000)
-        return
-      })
-    setMessage({text: text, level: 0})
+      })    
+      setMessage({text: `Updated '${newName}'`, level: 0})
+    } else {
+      // Create a new user with a number
+      personService.create({ name: newName, number: newNumber })
+        .then(returnedPerson => {
+          setPersons(newPersons.concat(returnedPerson))
+        })
+        .catch(error => {
+          console.log(error)
+          setMessage({text: `Failed creating '${newName}'`, level: 2})
+          setTimeout(() => setMessage({level: -1}), 15000)
+          return
+        })
+        setMessage({text: `Added '${newName}'`, level: 0})
+      }
     setNewName('')
     setNewNumber('')
     setTimeout(() => setMessage({level: -1}), 5000)
