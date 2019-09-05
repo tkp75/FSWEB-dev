@@ -91,7 +91,7 @@ const Notification = ({notification}) => {
       marginBottom: 10,
       borderStyle: 'solid',
       borderRadius: 5,
-      background: 'darkgrey',
+      background: 'darkblue',
       color: 'salmon',
       fontStyle: 'bold',
       fontSize: 20
@@ -122,8 +122,8 @@ const App = () => {
     event.preventDefault()
 /* commented out to test validation on backend
     if (!newName || !newNumber) {
-      setMessage({text: `Error, please fill in both name and number`, level: 1})
-      setTimeout(() => setMessage({level: -1}), 10000)
+      setMessage({text: `Error, please fill in both name and number`, level: 2})
+      setTimeout(() => setMessage({level: -1}), 15000)
       return
     } 
 */
@@ -143,28 +143,32 @@ const App = () => {
           setPersons(newPersons.filter(p => {
             if (p.id === returnedPerson.id) return returnedPerson
             return p
-          }))
-        })
-      .catch(error => {
-        let errorText
-        if (error.response) errorText = JSON.stringify(error.response.data)
-        else if (error.request) errorText = JSON.stringify(error.request.data)
-        else errorText = error.stack
-        console.log(`Failed modifying '${newName}':`,util.inspect(error))
-        setMessage({text: `Failed modifying '${newName}'\n${error.message}\n${errorText}`, level: 2})
-        setTimeout(() => setMessage({level: -1}), 15000)
-        return
-      })    
-      setMessage({text: `Updated '${newName}'`, level: 0})
-    } else {
-      // Create a new user with a number
-      personService.create({ name: newName, number: newNumber })
+          }))})
         .then(returnedPerson => {
-          setPersons(newPersons.concat(returnedPerson))
+          setMessage({text: `Updated '${newName}'`, level: 0})
+          setTimeout(() => setMessage({level: -1}), 5000)
         })
         .catch(error => {
           let errorText
-          if (error.response) errorText = JSON.stringify(error.response.data)
+          if (error.response) errorText = error.response.data.error
+          else if (error.request) errorText = JSON.stringify(error.request.data, null, 2)
+          else errorText = error.stack
+          console.log(`Failed modifying '${newName}':`,util.inspect(error))
+          setMessage({text: `Failed modifying '${newName}'\n${error.message}\n${errorText}`, level: 2})
+          setTimeout(() => setMessage({level: -1}), 15000)
+          return
+        })    
+    } else {
+      // Create a new user with a number
+      personService.create({ name: newName, number: newNumber })
+        .then(returnedPerson => setPersons(newPersons.concat(returnedPerson)))
+        .then(returnedPerson => {
+          setMessage({text: `Added '${newName}'`, level: 0})
+          setTimeout(() => setMessage({level: -1}), 5000)
+        })
+        .catch(error => {
+          let errorText
+          if (error.response) errorText = error.response.data.error
           else if (error.request) errorText = JSON.stringify(error.request.data)
           else errorText = error.stack
           console.log(`Failed creating '${newName}':`,util.inspect(error))
@@ -172,11 +176,9 @@ const App = () => {
           setTimeout(() => setMessage({level: -1}), 15000)
           return
         })
-        setMessage({text: `Added '${newName}'`, level: 0})
-    }
+      }
     setNewName('')
     setNewNumber('')
-    setTimeout(() => setMessage({level: -1}), 5000)
 }
 
   const handleDeleteClick = (event) => {
@@ -192,9 +194,13 @@ const App = () => {
     if (window.confirm(`Delete ${person.name}?`)) {
       personService.remove(person.id)
         .then(returnedPerson => setPersons(persons.filter(p => p.id !== person.id)))
+        .then(returnedPerson => {
+          setMessage({text: `Deleted '${person.name}' with id '${person.id}'`,level: 0})
+          setTimeout(() => setMessage({level: -1}), 5000)
+        })
         .catch(error => {
           let errorText
-          if (error.response) errorText = JSON.stringify(error.response.data)
+          if (error.response) errorText = error.response.data.error
           else if (error.request) errorText = JSON.stringify(error.request.data)
           else errorText = error.stack
           console.log(`Failed deleting '${person.name}' with id '${person.id}':`,util.inspect(error))
@@ -208,8 +214,6 @@ const App = () => {
       setTimeout(() => setMessage({level: -1}), 10000)
       return
     }
-    setMessage({text: `Deleted '${person.name}'`, level: 0})
-    setTimeout(() => setMessage({level: -1}), 5000)
   }
 
   useEffect(() => {
@@ -219,7 +223,7 @@ const App = () => {
       })
       .catch(error => {
         let errorText
-        if (error.response) errorText = JSON.stringify(error.response.data)
+        if (error.response) errorText = error.response.data.error
         else if (error.request) errorText = JSON.stringify(error.request.data)
         else errorText = error.stack
         console.log(`Could not get person list from server:`,util.inspect(error))
