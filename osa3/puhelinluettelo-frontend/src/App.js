@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
+const  util = require('util');
 
 const Filter = (props) => {
   return (
@@ -101,7 +102,7 @@ const Notification = ({notification}) => {
   }
   return (
     <div className="notification" style={styleList[notification.level]}>
-      {notification.text}
+      <pre>{notification.text}</pre>
     </div>
   )
 }
@@ -119,11 +120,13 @@ const App = () => {
 
   const handleSubmitClick = (event) => {
     event.preventDefault()
+/* commented out to test validation on backend
     if (!newName || !newNumber) {
       setMessage({text: `Error, please fill in both name and number`, level: 1})
       setTimeout(() => setMessage({level: -1}), 10000)
       return
     } 
+*/
     let newPersons = [...persons]
     const person = newPersons.find(p => p.name === newName)
     if (person !== undefined) {
@@ -143,8 +146,12 @@ const App = () => {
           }))
         })
       .catch(error => {
-        console.log(error)
-        setMessage({text: `Failed modifying '${newName}'`, level: 2})
+        let errorText
+        if (error.response) errorText = JSON.stringify(error.response.data)
+        else if (error.request) errorText = JSON.stringify(error.request.data)
+        else errorText = error.stack
+        console.log(`Failed modifying '${newName}':`,util.inspect(error))
+        setMessage({text: `Failed modifying '${newName}'\n${error.message}\n${errorText}`, level: 2})
         setTimeout(() => setMessage({level: -1}), 15000)
         return
       })    
@@ -156,13 +163,17 @@ const App = () => {
           setPersons(newPersons.concat(returnedPerson))
         })
         .catch(error => {
-          console.log(error)
-          setMessage({text: `Failed creating '${newName}'`, level: 2})
+          let errorText
+          if (error.response) errorText = JSON.stringify(error.response.data)
+          else if (error.request) errorText = JSON.stringify(error.request.data)
+          else errorText = error.stack
+          console.log(`Failed creating '${newName}':`,util.inspect(error))
+          setMessage({text: `Failed creating '${newName}'\n${error.message}\n${errorText}`, level: 2})
           setTimeout(() => setMessage({level: -1}), 15000)
           return
         })
         setMessage({text: `Added '${newName}'`, level: 0})
-      }
+    }
     setNewName('')
     setNewNumber('')
     setTimeout(() => setMessage({level: -1}), 5000)
@@ -171,17 +182,24 @@ const App = () => {
   const handleDeleteClick = (event) => {
     const id = event.target.getAttribute('id')
     const person = persons.find(person => person.id === id)
+/* commented out to test validation on backend
     if (id == null || person === undefined) {
       setMessage({text: `Failed deleting person with id '${id}'`, level: 2})
       setTimeout(() => setMessage({level: -1}), 15000)
       return
     }
+*/
     if (window.confirm(`Delete ${person.name}?`)) {
       personService.remove(person.id)
         .then(returnedPerson => setPersons(persons.filter(p => p.id !== person.id)))
         .catch(error => {
-          console.log(error)
-          setMessage({text: `Failed deleting '${person.name}' with id '${person.id}'`, level: 2})
+          let errorText
+          if (error.response) errorText = JSON.stringify(error.response.data)
+          else if (error.request) errorText = JSON.stringify(error.request.data)
+          else errorText = error.stack
+          console.log(`Failed deleting '${person.name}' with id '${person.id}':`,util.inspect(error))
+          setMessage({text: `Failed deleting '${person.name}' with id '${person.id}'\n${errorText}`,
+            level: 2})
           setTimeout(() => setMessage({level: -1}), 15000)
           return
         })
@@ -200,8 +218,12 @@ const App = () => {
         setPersons(returnedPersons.sort((p1, p2) => p1.name > p2.name))
       })
       .catch(error => {
-        console.log(error)
-        setMessage({text: `Could not get person list from server`, level: 2})
+        let errorText
+        if (error.response) errorText = JSON.stringify(error.response.data)
+        else if (error.request) errorText = JSON.stringify(error.request.data)
+        else errorText = error.stack
+        console.log(`Could not get person list from server:`,util.inspect(error))
+        setMessage({text: `Could not get person list from server\n${errorText}`, level: 2})
         setTimeout(() => setMessage({level: -1}), 15000)
       })      
   }, [])
