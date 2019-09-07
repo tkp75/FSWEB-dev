@@ -127,7 +127,7 @@ const App = () => {
       return
     } 
 */
-    let newPersons = [...persons]
+    const newPersons = JSON.parse(JSON.stringify(persons))
     const person = newPersons.find(p => p.name === newName)
     if (person !== undefined) {
       // Modify person if already exist and user agrees, cancel operation otherwise
