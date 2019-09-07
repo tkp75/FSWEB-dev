@@ -1,7 +1,9 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
-const  util = require('util');
+import util from 'util'
 
+// eslint-disable-next-line no-unused-vars
 const Filter = (props) => {
   return (
     <div>
@@ -14,6 +16,7 @@ const Filter = (props) => {
   )
 }
 
+// eslint-disable-next-line no-unused-vars
 const PersonForm = (props) => {
   return (
     <form>
@@ -43,9 +46,10 @@ const PersonForm = (props) => {
   )
 }
 
+// eslint-disable-next-line no-unused-vars
 const Persons = (props) => {
   return (
-    <ul style={{listStyleType: "none", padding: 0}}>
+    <ul style={{ listStyleType: 'none', padding: 0 }}>
       {props.persons.filter(person => person.name.toLocaleUpperCase().includes(props.filter))
         .map(person =>
           <li key={person.name}>
@@ -58,13 +62,15 @@ const Persons = (props) => {
   )
 }
 
+// eslint-disable-next-line no-unused-vars
 const DeleteButton = (props) => {
   return (
     <button id={props.id} onClick={props.deleteClickHandler}>delete</button>
   )
 }
 
-const Notification = ({notification}) => {
+// eslint-disable-next-line no-unused-vars
+const Notification = ({ notification }) => {
   const styleList = [
     { // INFO
       padding: 10,
@@ -112,7 +118,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newFilter, setNewFilter ] = useState('')
-  const [ message, setMessage ] = useState({level: -1})
+  const [ message, setMessage ] = useState({ level: -1 })
 
   const handleNameChange = (event) => setNewName(event.target.value)
   const handleNumberChange = (event) => setNewNumber(event.target.value)
@@ -120,20 +126,20 @@ const App = () => {
 
   const handleSubmitClick = (event) => {
     event.preventDefault()
-/* commented out to test validation on backend
+    /* commented out to test validation on backend
     if (!newName || !newNumber) {
       setMessage({text: `Error, please fill in both name and number`, level: 2})
       setTimeout(() => setMessage({level: -1}), 15000)
       return
-    } 
-*/
+    }
+    */
     const newPersons = JSON.parse(JSON.stringify(persons))
     const person = newPersons.find(p => p.name === newName)
     if (person !== undefined) {
       // Modify person if already exist and user agrees, cancel operation otherwise
       if (!window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
-        setMessage({text: `Cancelled updating '${newName}'`, level: 1})
-        setTimeout(() => setMessage({level: -1}), 10000)
+        setMessage({ text: `Cancelled updating '${newName}'`, level: 1 })
+        setTimeout(() => setMessage({ level: -1 }), 10000)
         return
       }
       person.name = newName
@@ -144,9 +150,9 @@ const App = () => {
             if (p.id === returnedPerson.id) return returnedPerson
             return p
           }))})
-        .then(returnedPerson => {
-          setMessage({text: `Updated '${newName}'`, level: 0})
-          setTimeout(() => setMessage({level: -1}), 5000)
+        .then(() => {
+          setMessage({ text: `Updated '${newName}'`, level: 0 })
+          setTimeout(() => setMessage({ level: -1 }), 5000)
         })
         .catch(error => {
           let errorText
@@ -154,17 +160,17 @@ const App = () => {
           else if (error.request) errorText = JSON.stringify(error.request.data, null, 2)
           else errorText = error.stack
           console.log(`Failed modifying '${newName}':`,util.inspect(error))
-          setMessage({text: `Failed modifying '${newName}'\n${error.message}\n${errorText}`, level: 2})
-          setTimeout(() => setMessage({level: -1}), 15000)
+          setMessage({ text: `Failed modifying '${newName}'\n${error.message}\n${errorText}`, level: 2 })
+          setTimeout(() => setMessage({ level: -1 }), 15000)
           return
-        })    
+        })
     } else {
       // Create a new user with a number
       personService.create({ name: newName, number: newNumber })
         .then(returnedPerson => setPersons(newPersons.concat(returnedPerson).sort((p1, p2) => p1.name > p2.name)))
-        .then(returnedPerson => {
-          setMessage({text: `Added '${newName}'`, level: 0})
-          setTimeout(() => setMessage({level: -1}), 5000)
+        .then(() => {
+          setMessage({ text: `Added '${newName}'`, level: 0 })
+          setTimeout(() => setMessage({ level: -1 }), 5000)
         })
         .catch(error => {
           let errorText
@@ -172,31 +178,31 @@ const App = () => {
           else if (error.request) errorText = JSON.stringify(error.request.data)
           else errorText = error.stack
           console.log(`Failed creating '${newName}':`,util.inspect(error))
-          setMessage({text: `Failed creating '${newName}'\n${error.message}\n${errorText}`, level: 2})
-          setTimeout(() => setMessage({level: -1}), 15000)
+          setMessage({ text: `Failed creating '${newName}'\n${error.message}\n${errorText}`, level: 2 })
+          setTimeout(() => setMessage({ level: -1 }), 15000)
           return
         })
-      }
+    }
     setNewName('')
     setNewNumber('')
-}
+  }
 
   const handleDeleteClick = (event) => {
     const id = event.target.getAttribute('id')
     const person = persons.find(person => person.id === id)
-/* commented out to test validation on backend
+    /* commented out to test validation on backend
     if (id == null || person === undefined) {
       setMessage({text: `Failed deleting person with id '${id}'`, level: 2})
       setTimeout(() => setMessage({level: -1}), 15000)
       return
     }
-*/
+    */
     if (window.confirm(`Delete ${person.name}?`)) {
       personService.remove(person.id)
-        .then(returnedPerson => setPersons(persons.filter(p => p.id !== person.id)))
-        .then(returnedPerson => {
-          setMessage({text: `Deleted '${person.name}' with id '${person.id}'`,level: 0})
-          setTimeout(() => setMessage({level: -1}), 5000)
+        .then(() => setPersons(persons.filter(p => p.id !== person.id)))
+        .then(() => {
+          setMessage({ text: `Deleted '${person.name}' with id '${person.id}'`,level: 0 })
+          setTimeout(() => setMessage({ level: -1 }), 5000)
         })
         .catch(error => {
           let errorText
@@ -204,14 +210,14 @@ const App = () => {
           else if (error.request) errorText = JSON.stringify(error.request.data)
           else errorText = error.stack
           console.log(`Failed deleting '${person.name}' with id '${person.id}':`,util.inspect(error))
-          setMessage({text: `Failed deleting '${person.name}' with id '${person.id}'\n${errorText}`,
-            level: 2})
-          setTimeout(() => setMessage({level: -1}), 15000)
+          setMessage({ text: `Failed deleting '${person.name}' with id '${person.id}'\n${errorText}`,
+            level: 2 })
+          setTimeout(() => setMessage({ level: -1 }), 15000)
           return
         })
     } else {
-      setMessage({text: `Cancelling deletion of '${person.name}' with id '${person.id}'`, level: 1})
-      setTimeout(() => setMessage({level: -1}), 10000)
+      setMessage({ text: `Cancelling deletion of '${person.name}' with id '${person.id}'`, level: 1 })
+      setTimeout(() => setMessage({ level: -1 }), 10000)
       return
     }
   }
@@ -226,10 +232,10 @@ const App = () => {
         if (error.response) errorText = error.response.data.error
         else if (error.request) errorText = JSON.stringify(error.request.data)
         else errorText = error.stack
-        console.log(`Could not get person list from server:`,util.inspect(error))
-        setMessage({text: `Could not get person list from server\n${errorText}`, level: 2})
-        setTimeout(() => setMessage({level: -1}), 15000)
-      })      
+        console.log('Could not get person list from server:',util.inspect(error))
+        setMessage({ text: `Could not get person list from server\n${errorText}`, level: 2 })
+        setTimeout(() => setMessage({ level: -1 }), 15000)
+      })
   }, [])
 
   return (
