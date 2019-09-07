@@ -72,7 +72,7 @@ const Notification = ({notification}) => {
       borderStyle: 'solid',
       borderRadius: 5,
       background: 'lightgrey',
-      color: 'green',
+      color: 'darkgreen',
       fontStyle: 'normal',
       fontSize: 20
     },
@@ -161,7 +161,7 @@ const App = () => {
     } else {
       // Create a new user with a number
       personService.create({ name: newName, number: newNumber })
-        .then(returnedPerson => setPersons(newPersons.concat(returnedPerson)))
+        .then(returnedPerson => setPersons(newPersons.concat(returnedPerson).sort((p1, p2) => p1.name > p2.name)))
         .then(returnedPerson => {
           setMessage({text: `Added '${newName}'`, level: 0})
           setTimeout(() => setMessage({level: -1}), 5000)
