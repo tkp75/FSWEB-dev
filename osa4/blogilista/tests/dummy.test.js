@@ -129,5 +129,23 @@ describe('mostBlogs', () => {
     expect(result).toEqual({ author: biggerListOfBlogs[3].author, blogs: 3 })
   })
 
+})
+
+describe('mostLikes', () => {
+
+  test('of empty list is empty', () => {
+    const result = listHelper.mostLikes([])
+    expect(result).toEqual({})
+  })
+
+  test('when list has only one blog equals author', () => {
+    const result = listHelper.mostLikes(listWithOneBlog)
+    expect(result).toEqual({ author: listWithOneBlog[0].author, likes: listWithOneBlog[0].likes })
+  })
+
+  test('of a bigger list is calculated right', () => {
+    const result = listHelper.mostLikes(biggerListOfBlogs)
+    expect(result).toEqual({ author: biggerListOfBlogs[1].author, likes: 17 })
+  })
 
 })
