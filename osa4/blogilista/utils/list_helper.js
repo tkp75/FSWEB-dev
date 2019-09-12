@@ -12,7 +12,20 @@ const totalLikes = (blogs) => {
   return totalLikes
 }
 
+const favoriteBlog = (blogs) => {
+  let favoriteBlog = []
+  let maxLikes=-1
+  blogs.forEach(blog => {
+    if (blog.likes > maxLikes) {
+      favoriteBlog=blog
+      maxLikes=blog.likes
+    }
+  })
+  return favoriteBlog
+}
+
 module.exports = {
   dummy,
-  totalLikes
+  totalLikes,
+  favoriteBlog
 }
