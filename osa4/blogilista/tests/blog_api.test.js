@@ -135,7 +135,6 @@ describe('setBlogs', () => {
 
 })
 
-/* API functions not implemented yet
 describe('modifyBlogs', () => {
 
   test('a blog can be deleted', async () => {
@@ -151,7 +150,6 @@ describe('modifyBlogs', () => {
   })
 
 })
-*/
 
 afterAll(() => {
   mongoose.connection.close()
