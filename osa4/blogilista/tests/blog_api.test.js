@@ -24,10 +24,21 @@ describe('getBlogs', () => {
       .expect('Content-Type', /application\/json/)
   })
 
-  test('all blogs are returned', async () => {
+  test('one blog is returned', async () => {
     const response = await api.get('/api/blogs')
-
     expect(response.body.length).toBe(helper.initialBlogs.length)
+  })
+
+  test('two blogs are returned', async () => {
+    const newBlog = {
+      'title': 'Blog Title',
+      'author': 'Blog Author',
+      'url': 'http://inter.net/blog?id=1',
+      'likes': 1,
+    }
+    await Blog.insertMany(newBlog)
+    const response = await api.get('/api/blogs')
+    expect(response.body.length).toBe(helper.initialBlogs.length + 1)
   })
 
   test('there is a blog from specific author', async () => {
