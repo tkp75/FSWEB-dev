@@ -149,6 +149,20 @@ describe('modifyBlogs', () => {
     expect(titles).not.toContain(blogToDelete.title)
   })
 
+  test('a blog can be modified', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+    blogToUpdate.likes = 10
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(blogToUpdate)
+      .expect(200)
+    const blogsAtEnd = await helper.blogsInDb()
+    const blog = blogsAtEnd.filter(blog => blog.id === blogToUpdate.id)[0]
+    expect(blog).toHaveProperty('likes',10)
+    expect(blog).toHaveProperty('title',blogToUpdate.title)
+  })
+
 })
 
 afterAll(() => {
