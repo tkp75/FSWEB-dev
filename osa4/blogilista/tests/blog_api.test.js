@@ -100,6 +100,19 @@ describe('setBlogs', () => {
     expect(blogsAtEnd.length).toBe(helper.initialBlogs.length)
   })
 
+  test('blog without title and url is not added', async () => {
+    const newBlog = {
+      'author': 'Blog Author',
+      'likes': 1,
+    }
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd.length).toBe(helper.initialBlogs.length)
+  })
+
   test('blog without likes is added', async () => {
     const newBlog = {
       'title': 'Blog Title',
