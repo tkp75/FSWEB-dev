@@ -24,6 +24,12 @@ describe('getBlogs', () => {
       .expect('Content-Type', /application\/json/)
   })
 
+  test('blog contain id', async () => {
+    const response = await api
+      .get('/api/blogs')
+    expect(response.body[0].id).toBeDefined()
+  })
+
   test('one blog is returned', async () => {
     const response = await api.get('/api/blogs')
     expect(response.body.length).toBe(helper.initialBlogs.length)
