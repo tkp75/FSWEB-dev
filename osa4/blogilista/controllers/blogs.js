@@ -20,7 +20,7 @@ blogsRouter.post('/', async (request, response, next) => {
     await blog
       .save()
       .then(result => {
-      // logger.inspect(result)
+        //logger.inspect('inspect result',result)
         response.status(201).json(result.toJSON())
       })
   } catch(exception) {

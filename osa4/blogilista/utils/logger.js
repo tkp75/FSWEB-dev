@@ -1,8 +1,16 @@
 const util = require('util')
 
-const inspect = (param) => {
-  if (process.env.NODE_ENV !== 'test') {
-    console.log('inspect:',util.inspect(param))
+const inspect = (...params) => {
+  if (process.env.NODE_ENV !== 'test' && params) {
+    if (params.length === 1) {
+      console.log(util.inspect(params[0]))
+    } else if (params.length > 1) {
+      console.log(params[0])
+      params.shift()
+      params.forEach(param => {
+        console.log(util.inspect(param))
+      })
+    }
   }
 }
 
