@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const Blog = require('../models/blog')
@@ -5,14 +6,30 @@ const User = require('../models/user')
 const app = require('../app')
 const helper = require('./test_helper')
 //const util = require('util')
-
 const api = supertest(app)
 
-let savedUser
-beforeAll(async() => {
+const savedUser = {
+  username: 'root',
+  password: 'sacred'
+}
+
+beforeAll(async () => {
   await User.deleteMany({})
-  const user = new User({ username: 'root', password: 'sekret' })
-  savedUser = await user.save()
+  const passwordHash = await bcrypt.hash('sacred', 10)
+  const dbUser = new User({
+    username: 'root',
+    passwordHash,
+  })
+  const savedDbUser = await dbUser.save()
+  const savedLogin = await api
+    .post('/api/login')
+    .set('Content-Type', 'application/json')
+    .send(savedUser)
+  // eslint-disable-next-line require-atomic-updates
+  savedUser.id=savedDbUser._id.toString()
+  if (!savedLogin || !savedLogin.body || !savedLogin.body.token) return
+  // eslint-disable-next-line require-atomic-updates
+  savedUser.token=savedLogin.body.token
 })
 
 beforeEach(async () => {
@@ -84,11 +101,11 @@ describe('setBlogs', () => {
       'author': 'Blog Author',
       'url': 'http://inter.net/blog?id=1',
       'likes': 1,
-      'userId': savedUser._id,
+      'userId': savedUser.id,
     }
-    //console.log('newBlog=',util.inspect(newBlog))
     await api
       .post('/api/blogs')
+      .set('authorization', `Bearer ${savedUser.token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -101,10 +118,11 @@ describe('setBlogs', () => {
   test('blog with likes only is not added', async () => {
     const newBlog = {
       likes: 0,
-      'userId': savedUser._id,
+      'userId': savedUser.id,
     }
     await api
       .post('/api/blogs')
+      .set('authorization', `Bearer ${savedUser.token}`)
       .send(newBlog)
       .expect(400)
     const blogsAtEnd = await helper.blogsInDb()
@@ -115,10 +133,11 @@ describe('setBlogs', () => {
     const newBlog = {
       'author': 'Blog Author',
       'likes': 1,
-      'userId': savedUser._id,
+      'userId': savedUser.id,
     }
     await api
       .post('/api/blogs')
+      .set('authorization', `Bearer ${savedUser.token}`)
       .send(newBlog)
       .expect(400)
     const blogsAtEnd = await helper.blogsInDb()
@@ -130,10 +149,11 @@ describe('setBlogs', () => {
       'title': 'Blog Title',
       'author': 'Blog Author',
       'url': 'http://inter.net/blog?id=1',
-      'userId': savedUser._id,
+      'userId': savedUser.id,
     }
     const result = await api
       .post('/api/blogs')
+      .set('authorization', `Bearer ${savedUser.token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
