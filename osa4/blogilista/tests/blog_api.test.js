@@ -1,11 +1,19 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const app = require('../app')
 const helper = require('./test_helper')
 //const util = require('util')
 
 const api = supertest(app)
+
+let savedUser
+beforeAll(async() => {
+  await User.deleteMany({})
+  const user = new User({ username: 'root', password: 'sekret' })
+  savedUser = await user.save()
+})
 
 beforeEach(async () => {
   await Blog.deleteMany({})
@@ -76,7 +84,9 @@ describe('setBlogs', () => {
       'author': 'Blog Author',
       'url': 'http://inter.net/blog?id=1',
       'likes': 1,
+      'userId': savedUser._id,
     }
+    //console.log('newBlog=',util.inspect(newBlog))
     await api
       .post('/api/blogs')
       .send(newBlog)
@@ -90,7 +100,8 @@ describe('setBlogs', () => {
 
   test('blog with likes only is not added', async () => {
     const newBlog = {
-      likes: 0
+      likes: 0,
+      'userId': savedUser._id,
     }
     await api
       .post('/api/blogs')
@@ -104,6 +115,7 @@ describe('setBlogs', () => {
     const newBlog = {
       'author': 'Blog Author',
       'likes': 1,
+      'userId': savedUser._id,
     }
     await api
       .post('/api/blogs')
@@ -118,6 +130,7 @@ describe('setBlogs', () => {
       'title': 'Blog Title',
       'author': 'Blog Author',
       'url': 'http://inter.net/blog?id=1',
+      'userId': savedUser._id,
     }
     const result = await api
       .post('/api/blogs')

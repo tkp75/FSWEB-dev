@@ -2,8 +2,9 @@ POST http://localhost:3003/api/blogs/
 Content-Type: application/json
 
 {
-    "title": "Otsikko",
-    "author": "Kirjailija",
-    "url": "http://inter.net/kirja?id=1",
-    "likes": 0
+    "title": "Otsikko2",
+    "author": "Kirjailija2",
+    "url": "http://inter.net/kirja?id=2",
+    "likes": 1,
+    "userId": "5d867cb9c4417033040318b4"
 }
