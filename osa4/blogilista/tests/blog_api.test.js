@@ -166,16 +166,101 @@ describe('setBlogs', () => {
 
 describe('modifyBlogs', () => {
 
-  test('a blog can be deleted', async () => {
+  test('a blog without user id can be deleted by authenticated user', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('authorization', `Bearer ${savedUser.token}`)
       .expect(204)
     const blogsAtEnd = await helper.blogsInDb()
     expect(blogsAtEnd.length).toBe(helper.initialBlogs.length - 1)
     const titles = blogsAtEnd.map(b => b.title)
     expect(titles).not.toContain(blogToDelete.title)
+  })
+
+  test('own blog can be deleted', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const newBlog = {
+      'title': 'Blog Title',
+      'author': 'Blog Author',
+      'url': 'http://inter.net/blog?id=1',
+      'likes': 1
+    }
+    const blogToDelete = await api
+      .post('/api/blogs')
+      .set('authorization', `Bearer ${savedUser.token}`)
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+    const blogsNow = await helper.blogsInDb()
+    expect(blogsNow.length).toBe(blogsAtStart.length + 1)
+    await api
+      .delete(`/api/blogs/${blogToDelete.body.id}`)
+      .set('authorization', `Bearer ${savedUser.token}`)
+      .expect(204)
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd.length).toBe(blogsAtStart.length)
+    const titles = blogsAtEnd.map(b => b.title)
+    expect(titles).not.toContain(blogToDelete.body.title)
+  })
+
+  test('other\'s blog cannot be deleted', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const mySavedUser = {
+      username: 'Administrator',
+      password: 'scarred'
+    }
+    const passwordHash = await bcrypt.hash('scarred', 10)
+    const myUser = new User({
+      username: 'Administrator',
+      passwordHash,
+    })
+    const mySavedDbUser = await myUser.save()
+    const mySavedLogin = await api
+      .post('/api/login')
+      .set('Content-Type', 'application/json')
+      .send(mySavedUser)
+    mySavedUser.id=mySavedDbUser._id.toString()
+    mySavedUser.token=mySavedLogin.body.token
+
+    const othersBlog = {
+      'title': 'Other Title',
+      'author': 'Other Author',
+      'url': 'http://inter.net/blog?id=10',
+      'likes': 0
+    }
+    const myBlog = {
+      'title': 'My Title',
+      'author': 'My Author',
+      'url': 'http://inter.net/blog?id=12',
+      'likes': 1
+    }
+    const blogNotToDelete = await api
+      .post('/api/blogs')
+      .set('authorization', `Bearer ${savedUser.token}`)
+      .send(othersBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+    const blogToDelete = await api
+      .post('/api/blogs')
+      .set('authorization', `Bearer ${mySavedUser.token}`)
+      .send(myBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+    const blogsNow = await helper.blogsInDb()
+    expect(blogsNow.length).toBe(blogsAtStart.length + 2)
+    await api
+      .delete(`/api/blogs/${blogNotToDelete.body.id}`)
+      .set('authorization', `Bearer ${mySavedUser.token}`)
+      .expect(401)
+    await api
+      .delete(`/api/blogs/${blogToDelete.body.id}`)
+      .set('authorization', `Bearer ${mySavedUser.token}`)
+      .expect(204)
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd.length).toBe(blogsAtStart.length +1)
+
   })
 
   test('a blog can be modified', async () => {
