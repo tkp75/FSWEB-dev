@@ -1,11 +1,10 @@
 POST http://localhost:3003/api/blogs/
-authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1lbWUiLCJpZCI6IjVkODY3Y2I5YzQ0MTcwMzMwNDAzMThiNCIsImlhdCI6MTU2OTE0OTA1Mn0.2Q-cLvBx--EESk0ZiAffkvnJL7PgAGgV3_vcOk-E8w8
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1lbWUiLCJpZCI6IjVkODY3Y2I5YzQ0MTcwMzMwNDAzMThiNCIsImlhdCI6MTU2OTE3MTI4Nn0.Wm4kO0MbhpWtO6Zxl6bwYbW0_f_szOpKhebRCO9z_bE
 Content-Type: application/json
 
 {
-    "title": "Otsikko1",
-    "author": "Kirjailija1",
-    "url": "http://inter.net/kirja?id=20",
-    "likes": 1,
-    "userId": "5d867cb9c4417033040318b4"
+    "title": "Otsikko9",
+    "author": "Kirjailija9",
+    "url": "http://inter.net/kirja?id=9",
+    "likes": 9
 }

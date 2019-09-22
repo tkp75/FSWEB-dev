@@ -100,8 +100,7 @@ describe('setBlogs', () => {
       'title': 'Blog Title',
       'author': 'Blog Author',
       'url': 'http://inter.net/blog?id=1',
-      'likes': 1,
-      'userId': savedUser.id,
+      'likes': 1
     }
     await api
       .post('/api/blogs')
@@ -117,8 +116,7 @@ describe('setBlogs', () => {
 
   test('blog with likes only is not added', async () => {
     const newBlog = {
-      likes: 0,
-      'userId': savedUser.id,
+      likes: 0
     }
     await api
       .post('/api/blogs')
@@ -132,8 +130,7 @@ describe('setBlogs', () => {
   test('blog without title and url is not added', async () => {
     const newBlog = {
       'author': 'Blog Author',
-      'likes': 1,
-      'userId': savedUser.id,
+      'likes': 1
     }
     await api
       .post('/api/blogs')
@@ -148,8 +145,7 @@ describe('setBlogs', () => {
     const newBlog = {
       'title': 'Blog Title',
       'author': 'Blog Author',
-      'url': 'http://inter.net/blog?id=1',
-      'userId': savedUser.id,
+      'url': 'http://inter.net/blog?id=1'
     }
     const result = await api
       .post('/api/blogs')
