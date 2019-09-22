@@ -1,10 +1,10 @@
 POST http://localhost:3003/api/blogs/
-authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1lbWUiLCJpZCI6IjVkODY3Y2I5YzQ0MTcwMzMwNDAzMThiNCIsImlhdCI6MTU2OTE3MTI4Nn0.Wm4kO0MbhpWtO6Zxl6bwYbW0_f_szOpKhebRCO9z_bE
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Iml0ZSIsImlkIjoiNWQ4N2I4NDY4YWIyNzYyMTA4Y2E1ODBlIiwiaWF0IjoxNTY5MTc1NjgzfQ.IbyoZ7Yyq2Z6NZQUtQfICAqQQdbdyzjCVaWo6bHthN0
 Content-Type: application/json
 
 {
-    "title": "Otsikko9",
-    "author": "Kirjailija9",
-    "url": "http://inter.net/kirja?id=9",
-    "likes": 9
+    "title": "S-mies",
+    "author": "Taiteilija",
+    "url": "http://inter.net/teos?id=123",
+    "likes": 987
 }
