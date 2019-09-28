@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 //import './App.css';
-import Blog from './components/Blog';
+import { Blog, CreateBlog } from './components/Blog';
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -14,9 +14,7 @@ const LoginForm = (props) => {
         password<input type="password" onChange={props.changePasswordHandler} name="Password" value={props.password}/>
       </div>
       <div>
-        <button type="submit" onClick={props.loginClickHandler} name="Login">
-          login
-        </button>
+        <button type="submit" onClick={props.loginClickHandler} name="Login">login</button>
       </div>
     </form>
   )
@@ -41,7 +39,7 @@ function App() {
       const loggedUser = JSON.parse(loggedUserJSON)
       if (loggedUser.token) {
         setUser(loggedUser)
-        //blogService.setToken(loggedUser.token)
+        blogService.setToken(loggedUser.token)
       }
     }
   }, [])
@@ -65,7 +63,7 @@ function App() {
         return
       }
       setUser(loginResponse)
-      //blogService.setToken(loginResponse.token)
+      blogService.setToken(loginResponse.token)
       setUsername('')
       setPassword('')
       window.localStorage.setItem('loggedBloglistUser', JSON.stringify(loginResponse)) 
@@ -79,6 +77,10 @@ function App() {
     event.preventDefault()
     setUser(null)
     window.localStorage.removeItem('loggedBloglistUser')
+  }
+  const handleBlogCallback = (newBlog) => {
+    if (!newBlog) return
+    setBlogs(blogs.concat(newBlog))
   }
 
   if (!user) {
@@ -102,9 +104,8 @@ function App() {
     <div className="App">
       <h2>blogs</h2>
       <p>{user.name} logged in <button type="submit" onClick={handleLogoutCLick} name="Logout">logout</button></p>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
+      <CreateBlog blogCallback={handleBlogCallback}/>
+      {blogs.map(blog => <Blog key={blog.id} blog={blog} />)}
     </div>
   )
 }
