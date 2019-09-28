@@ -1,24 +1,9 @@
-import React, { useState, useEffect } from 'react';
-//import './App.css';
-import { Blog, CreateBlog } from './components/Blog';
+import React, { useState, useEffect } from 'react'
+import LoginForm from './components/Login'
+import { Blog, CreateBlog } from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
-
-const LoginForm = (props) => {
-  return (
-    <form>
-      <div>
-        username<input type="text" onChange={props.changeUsernameHandler} name="Username" value={props.username}/>
-      </div>
-      <div>
-        password<input type="password" onChange={props.changePasswordHandler} name="Password" value={props.password}/>
-      </div>
-      <div>
-        <button type="submit" onClick={props.loginClickHandler} name="Login">login</button>
-      </div>
-    </form>
-  )
-}
 
 
 function App() {
@@ -26,6 +11,7 @@ function App() {
   const [ password, setPassword ] = useState('')
   const [ user, setUser ] = useState(null)
   const [ blogs, setBlogs ] = useState([])
+  const [ message, setMessage ] = useState({ level: -1 })
 
   useEffect(() => {
     blogService
@@ -49,7 +35,8 @@ function App() {
   const handleLoginClick = async (event) => {
     event.preventDefault()
     if (!username || !password) {
-      alert(`Error, please fill in both username and password`)
+      setMessage({text: `WARNING: invalid username or password`, level: 1})
+      setTimeout(() => setMessage({level: -1}), 10000)
       setUser(null)
       window.localStorage.removeItem('loggedBloglistUser')
       return
@@ -57,7 +44,8 @@ function App() {
     try {
       const loginResponse = await loginService.login({ username, password })
       if (!loginResponse || !loginResponse.token) {
-        alert(`Error, login failed\n${loginResponse}`)
+        setMessage({text: `ERROR: wrong username or password`, level: 2})
+        setTimeout(() => setMessage({level: -1}), 15000)
         setUser(null)
         window.localStorage.removeItem('loggedBloglistUser')
         return
@@ -68,7 +56,8 @@ function App() {
       setPassword('')
       window.localStorage.setItem('loggedBloglistUser', JSON.stringify(loginResponse)) 
     } catch (exception) {
-      alert(`Error, login failed\n${exception}`)
+      setMessage({text: `ERROR: login failed\n${exception}`, level: 2})
+      setTimeout(() => setMessage({level: -1}), 15000)
       setUser(null)
       window.localStorage.removeItem('loggedBloglistUser')
     }
@@ -82,12 +71,17 @@ function App() {
     if (!newBlog) return
     setBlogs(blogs.concat(newBlog))
   }
+  const handleNotificationCallback = (text, level, duration) => {
+    setMessage({text: text, level: level})
+    setTimeout(() => setMessage({level: -1}), duration)
+  }
 
   if (!user) {
     // Show login form if not logged in
     return (
       <div className="App">
         <h2>Log in to application</h2>
+        <Notification notification={message} />
         <LoginForm
           changeUsernameHandler={handleUsernameChange}
           username={username}
@@ -103,8 +97,9 @@ function App() {
   return (
     <div className="App">
       <h2>blogs</h2>
+      <Notification notification={message} />
       <p>{user.name} logged in <button type="submit" onClick={handleLogoutCLick} name="Logout">logout</button></p>
-      <CreateBlog blogCallback={handleBlogCallback}/>
+      <CreateBlog blogCallback={handleBlogCallback} notificationCallback={handleNotificationCallback}/>
       {blogs.map(blog => <Blog key={blog.id} blog={blog} />)}
     </div>
   )

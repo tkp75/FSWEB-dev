@@ -17,21 +17,22 @@ const CreateBlog = (props) => {
   const handleCreateClick = async (event) => {
     event.preventDefault()
     if (!title && !author && !url) {
-      alert('Error, nothing to save')
+      props.notificationCallback('WARNING: no blog to save', 1, 10000)
       return
     }
     try {
       const createResponse = await blogService.create({title: title, author: author, url: url})
       if (!createResponse || createResponse.error) {
-        alert(`Error, creating blog failed\n${createResponse}`)
+        props.notificationCallback(`ERROR: creating a blog failed\n${createResponse}`, 2, 15000)
         return
       }
       props.blogCallback(createResponse)
       setTitle('')
       setAuthor('')
       setUrl('')
+      props.notificationCallback(`INFO: blog saved\n\tTitle: ${title}\n\tAuthor: ${author}`, 0, 5000)
     } catch (exception) {
-      alert(`Error, blog creation failed\n${exception}`)
+      props.notificationCallback(`ERROR: creating a blog failed\n${exception}`, 2, 15000)
     }
   } 
 
