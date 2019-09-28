@@ -35,6 +35,16 @@ function App() {
         setBlogs(initialNotes)
       })
   }, [])
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
+    if (loggedUserJSON) {
+      const loggedUser = JSON.parse(loggedUserJSON)
+      if (loggedUser.token) {
+        setUser(loggedUser)
+        //blogService.setToken(loggedUser.token)
+      }
+    }
+  }, [])
 
   const handleUsernameChange = (event) => setUsername(event.target.value)
   const handlePasswordChange = (event) => setPassword(event.target.value)
@@ -43,24 +53,34 @@ function App() {
     if (!username || !password) {
       alert(`Error, please fill in both username and password`)
       setUser(null)
+      window.localStorage.removeItem('loggedBloglistUser')
       return
     }  
     try {
       const loginResponse = await loginService.login({ username, password })
       if (!loginResponse || !loginResponse.token) {
-        console.log('Login failed: loginResponse=',loginResponse)
         alert(`Error, login failed\n${loginResponse}`)
         setUser(null)
+        window.localStorage.removeItem('loggedBloglistUser')
         return
       }
       setUser(loginResponse)
+      //blogService.setToken(loginResponse.token)
       setUsername('')
       setPassword('')
+      window.localStorage.setItem('loggedBloglistUser', JSON.stringify(loginResponse)) 
     } catch (exception) {
       alert(`Error, login failed\n${exception}`)
+      setUser(null)
+      window.localStorage.removeItem('loggedBloglistUser')
     }
   } 
-  
+  const handleLogoutCLick = async (event) => {
+    event.preventDefault()
+    setUser(null)
+    window.localStorage.removeItem('loggedBloglistUser')
+  }
+
   if (!user) {
     // Show login form if not logged in
     return (
@@ -81,7 +101,7 @@ function App() {
   return (
     <div className="App">
       <h2>blogs</h2>
-      <p>{user.name} logged in</p>
+      <p>{user.name} logged in <button type="submit" onClick={handleLogoutCLick} name="Logout">logout</button></p>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
