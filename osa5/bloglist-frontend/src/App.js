@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import LoginForm from './components/Login'
-import { Blog, CreateBlog } from './components/Blog'
+import { BlogList, CreateBlog } from './components/Blog'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 
-function App() {
+const App = () => {
   const [ username, setUsername ] = useState('')
   const [ password, setPassword ] = useState('')
   const [ user, setUser ] = useState(null)
@@ -29,7 +30,7 @@ function App() {
       }
     }
   }, [])
-
+  const blogFormRef = React.createRef()
   const handleUsernameChange = (event) => setUsername(event.target.value)
   const handlePasswordChange = (event) => setPassword(event.target.value)
   const handleLoginClick = async (event) => {
@@ -67,20 +68,20 @@ function App() {
     setUser(null)
     window.localStorage.removeItem('loggedBloglistUser')
   }
-  const handleBlogCallback = (newBlog) => {
-    if (!newBlog) return
-    setBlogs(blogs.concat(newBlog))
-  }
-  const handleNotificationCallback = (text, level, duration) => {
+  const handleNotificationCallback = (text, level, duration)  => {
     setMessage({text: text, level: level})
     setTimeout(() => setMessage({level: -1}), duration)
+  }
+  const handleCreateBlogCallback = (newBlog) => {
+    blogFormRef.current.toggleVisibility()
+    setBlogs(blogs.concat(newBlog))
   }
 
   if (!user) {
     // Show login form if not logged in
     return (
       <div className="App">
-        <h2>Log in to application</h2>
+        <h2>Log in to bloglist application</h2>
         <Notification notification={message} />
         <LoginForm
           changeUsernameHandler={handleUsernameChange}
@@ -97,10 +98,12 @@ function App() {
   return (
     <div className="App">
       <h2>blogs</h2>
-      <Notification notification={message} />
+      <Notification notification={message}/>
       <p>{user.name} logged in <button type="submit" onClick={handleLogoutCLick} name="Logout">logout</button></p>
-      <CreateBlog blogCallback={handleBlogCallback} notificationCallback={handleNotificationCallback}/>
-      {blogs.map(blog => <Blog key={blog.id} blog={blog} />)}
+      <Togglable showLabel='new blog' hideLabel='cancel' ref={blogFormRef}>
+        <CreateBlog handleNotificationCallback={handleNotificationCallback} handleCreateBlogCallback={handleCreateBlogCallback}/>
+      </Togglable>
+      <BlogList blogs={blogs}/>
     </div>
   )
 }
