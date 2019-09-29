@@ -77,33 +77,31 @@ const App = () => {
     setBlogs(blogs.concat(newBlog))
   }
 
-  if (!user) {
-    // Show login form if not logged in
-    return (
-      <div className="App">
-        <h2>Log in to bloglist application</h2>
-        <Notification notification={message} />
-        <LoginForm
-          changeUsernameHandler={handleUsernameChange}
-          username={username}
-          changePasswordHandler={handlePasswordChange}
-          password={password}
-          loginClickHandler={handleLoginClick}
-        />
-      </div>
-    )
-  }
-
-  // Show blogs if logged in
+  // Show login form if not logged in
   return (
     <div className="App">
-      <h2>blogs</h2>
-      <Notification notification={message}/>
-      <p>{user.name} logged in <button type="submit" onClick={handleLogoutCLick} name="Logout">logout</button></p>
-      <Togglable showLabel='new blog' hideLabel='cancel' ref={blogFormRef}>
-        <CreateBlog handleNotificationCallback={handleNotificationCallback} handleCreateBlogCallback={handleCreateBlogCallback}/>
-      </Togglable>
-      <BlogList blogs={blogs}/>
+      {user === null ?
+        <div>
+          <h2>Log in to bloglist application</h2>
+          <Notification notification={message} />
+          <LoginForm
+            changeUsernameHandler={handleUsernameChange}
+            username={username}
+            changePasswordHandler={handlePasswordChange}
+            password={password}
+            loginClickHandler={handleLoginClick}
+          />
+        </div> :
+        <div>          
+          <h2>blogs</h2>
+          <Notification notification={message}/>
+          <p>{user.name} logged in <button type="submit" onClick={handleLogoutCLick} name="Logout">logout</button></p>
+          <Togglable showLabel='new blog' hideLabel='cancel' ref={blogFormRef}>
+            <CreateBlog handleNotificationCallback={handleNotificationCallback} handleCreateBlogCallback={handleCreateBlogCallback}/>
+          </Togglable>
+          <BlogList blogs={blogs}/>
+        </div>
+      }
     </div>
   )
 }

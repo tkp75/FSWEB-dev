@@ -47,13 +47,13 @@ const CreateBlog = (props) => {
       <h2>create new</h2>
       <form>
         <div>
-          title:<input type="text" onChange={handleTitleChange} name="Title" value={props.title}/>
+          title:<input type="text" onChange={handleTitleChange} name="Title" value={title}/>
         </div>
         <div>
-          author:<input type="text" onChange={handleAuthorChange} name="Author" value={props.author}/>
+          author:<input type="text" onChange={handleAuthorChange} name="Author" value={author}/>
         </div>
         <div>
-          url:<input type="text" onChange={handleUrlChange} name="Url" value={props.url}/>
+          url:<input type="text" onChange={handleUrlChange} name="Url" value={url}/>
         </div>
         <div>
           <button type="submit" onClick={handleClick} name="Create">create</button>
