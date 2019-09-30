@@ -1,15 +1,32 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog }) => (
-  <div>
-    {blog.title} {blog.author}
-  </div>
-)
+const Blog = ({ blog, handleBlogClick }) => {
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: 'solid',
+    borderWidth: 1,
+    marginBottom: 5
+  }
+  const showFull = { display: blog.full ? '' : 'none' }
+  return (
+    <div style={blogStyle}>
+      <div onClick={() => handleBlogClick(blog)}>
+        {blog.title} {blog.author}
+        <div style={showFull}>
+          <a href={blog.url}>{blog.url}</a><br/>
+          {blog.likes} likes<button>like</button><br/>
+          added by {blog.user.name}
+        </div>
+      </div>
+    </div>
+  )
+}
 
-const BlogList = ({ blogs }) => (
+const BlogList = ({ blogs, handleBlogClick }) => (
   <div>
-    {blogs.map(blog => <Blog key={blog.id} blog={blog}/>)}
+    {blogs.map(blog => <Blog key={blog.id} blog={blog} handleBlogClick={handleBlogClick}/>)}
   </div>
 )
 

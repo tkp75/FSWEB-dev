@@ -76,6 +76,13 @@ const App = () => {
     blogFormRef.current.toggleVisibility()
     setBlogs(blogs.concat(newBlog))
   }
+  const handleBlogClick = (blog) => {
+    if (blog.full === true) blog.full = false
+    else  blog.full = true
+    const blogIndex = blogs.findIndex(b => b.id === blog.id)
+    const newBlogs = Object.assign([], blogs, {[blogIndex]: blog});
+    setBlogs(newBlogs)
+  }
 
   // Show login form if not logged in
   return (
@@ -99,7 +106,7 @@ const App = () => {
           <Togglable showLabel='new blog' hideLabel='cancel' ref={blogFormRef}>
             <CreateBlog handleNotificationCallback={handleNotificationCallback} handleCreateBlogCallback={handleCreateBlogCallback}/>
           </Togglable>
-          <BlogList blogs={blogs}/>
+          <BlogList blogs={blogs} handleBlogClick={handleBlogClick}/>
         </div>
       }
     </div>
