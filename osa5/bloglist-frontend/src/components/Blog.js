@@ -60,7 +60,7 @@ const CreateBlog = (props) => {
       return
     }
     try {
-      const createResponse = await blogService.create({title: title, author: author, url: url})
+      const createResponse = await blogService.create({ title: title, author: author, url: url })
       if (!createResponse || createResponse.error) {
         props.handleNotificationCallback(`ERROR: creating a blog failed\n${createResponse}`, 2, 15000)
         return
@@ -73,7 +73,7 @@ const CreateBlog = (props) => {
     } catch (exception) {
       props.handleNotificationCallback(`ERROR: creating a blog failed\n${exception}`, 2, 15000)
     }
-  } 
+  }
 
   return (
     <div>
