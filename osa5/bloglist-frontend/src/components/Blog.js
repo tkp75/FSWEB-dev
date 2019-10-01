@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, handleBlogClick, handleLikeClick }) => {
   const showFull = { display: blog.full ? '' : 'none' }
@@ -17,7 +18,7 @@ const Blog = ({ blog, handleBlogClick, handleLikeClick }) => {
   )
 }
 
-const BlogList = ({ blogs, handleBlogClick, handleLikeClick, handleRemoveClick, username }) => {
+const BlogList = ({ blogs, username, handleBlogClick, handleLikeClick, handleRemoveClick }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -35,6 +36,14 @@ const BlogList = ({ blogs, handleBlogClick, handleLikeClick, handleRemoveClick, 
       )})}
     </>
   )
+}
+
+BlogList.propTypes = {
+  blogs: PropTypes.array.isRequired,
+  username: PropTypes.string.isRequired,
+  handleBlogClick: PropTypes.func.isRequired,
+  handleLikeClick: PropTypes.func.isRequired,
+  handleRemoveClick: PropTypes.func.isRequired
 }
 
 const CreateBlog = (props) => {
