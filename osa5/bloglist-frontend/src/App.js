@@ -80,7 +80,21 @@ const App = () => {
     if (blog.full === true) blog.full = false
     else  blog.full = true
     const blogIndex = blogs.findIndex(b => b.id === blog.id)
-    const newBlogs = Object.assign([], blogs, {[blogIndex]: blog});
+    const newBlogs = Object.assign([], blogs, {[blogIndex]: blog})
+    setBlogs(newBlogs)
+  }
+  const handleLikeClick = (blog) => {
+    blog.likes++
+    blogService.update({
+      id: blog.id,
+      user: blog.user.id,
+      likes: blog.likes,
+      author: blog.author,
+      title: blog.title,
+      url: blog.url
+    })
+    const blogIndex = blogs.findIndex(b => b.id === blog.id)
+    const newBlogs = Object.assign([], blogs, {[blogIndex]: blog})
     setBlogs(newBlogs)
   }
 
@@ -106,7 +120,7 @@ const App = () => {
           <Togglable showLabel='new blog' hideLabel='cancel' ref={blogFormRef}>
             <CreateBlog handleNotificationCallback={handleNotificationCallback} handleCreateBlogCallback={handleCreateBlogCallback}/>
           </Togglable>
-          <BlogList blogs={blogs} handleBlogClick={handleBlogClick}/>
+          <BlogList blogs={blogs} handleBlogClick={handleBlogClick} handleLikeClick={handleLikeClick}/>
         </div>
       }
     </div>
@@ -114,4 +128,4 @@ const App = () => {
 }
 
 
-export default App;
+export default App

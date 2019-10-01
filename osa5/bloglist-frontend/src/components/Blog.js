@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, handleBlogClick }) => {
+const Blog = ({ blog, handleBlogClick, handleLikeClick }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -14,19 +14,19 @@ const Blog = ({ blog, handleBlogClick }) => {
     <div style={blogStyle}>
       <div onClick={() => handleBlogClick(blog)}>
         {blog.title} {blog.author}
-        <div style={showFull}>
-          <a href={blog.url}>{blog.url}</a><br/>
-          {blog.likes} likes<button>like</button><br/>
-          added by {blog.user.name}
-        </div>
+      </div>
+      <div style={showFull}>
+        <a href={blog.url}>{blog.url}</a><br/>
+        {blog.likes} likes<button onClick={() => handleLikeClick(blog)}>like</button><br/>
+        added by {blog.user.name}
       </div>
     </div>
   )
 }
 
-const BlogList = ({ blogs, handleBlogClick }) => (
+const BlogList = ({ blogs, handleBlogClick, handleLikeClick }) => (
   <div>
-    {blogs.map(blog => <Blog key={blog.id} blog={blog} handleBlogClick={handleBlogClick}/>)}
+    {blogs.map(blog => <Blog key={blog.id} blog={blog} handleBlogClick={handleBlogClick} handleLikeClick={handleLikeClick}/>)}
   </div>
 )
 
