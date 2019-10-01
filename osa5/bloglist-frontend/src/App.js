@@ -97,6 +97,11 @@ const App = () => {
     const newBlogs = Object.assign([], blogs, {[blogIndex]: blog})
     setBlogs(newBlogs)
   }
+  const handleRemoveClick = (blog) => {
+    blogService.remove(blog.id)
+    const newBlogs = blogs.filter(b => b.id!==blog.id)
+    setBlogs(newBlogs)
+  }
 
   // Show login form if not logged in
   return (
@@ -120,7 +125,7 @@ const App = () => {
           <Togglable showLabel='new blog' hideLabel='cancel' ref={blogFormRef}>
             <CreateBlog handleNotificationCallback={handleNotificationCallback} handleCreateBlogCallback={handleCreateBlogCallback}/>
           </Togglable>
-          <BlogList blogs={blogs} handleBlogClick={handleBlogClick} handleLikeClick={handleLikeClick}/>
+          <BlogList blogs={blogs} handleBlogClick={handleBlogClick} handleLikeClick={handleLikeClick} handleRemoveClick={handleRemoveClick}/>
         </div>
       }
     </div>
