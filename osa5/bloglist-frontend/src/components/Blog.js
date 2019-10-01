@@ -26,7 +26,7 @@ const Blog = ({ blog, handleBlogClick, handleLikeClick }) => {
 
 const BlogList = ({ blogs, handleBlogClick, handleLikeClick }) => (
   <div>
-    {blogs.map(blog => <Blog key={blog.id} blog={blog} handleBlogClick={handleBlogClick} handleLikeClick={handleLikeClick}/>)}
+    {blogs.sort((a,b) => b.likes - a.likes).map(blog => <Blog key={blog.id} blog={blog} handleBlogClick={handleBlogClick} handleLikeClick={handleLikeClick}/>)}
   </div>
 )
 
