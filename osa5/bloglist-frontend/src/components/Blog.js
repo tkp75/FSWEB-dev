@@ -1,17 +1,10 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, handleBlogClick, handleLikeClick, handleRemoveClick }) => {
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
+const Blog = ({ blog, handleBlogClick, handleLikeClick }) => {
   const showFull = { display: blog.full ? '' : 'none' }
   return (
-    <div style={blogStyle}>
+    <>
       <div onClick={() => handleBlogClick(blog)}>
         {blog.title} {blog.author}
       </div>
@@ -20,17 +13,29 @@ const Blog = ({ blog, handleBlogClick, handleLikeClick, handleRemoveClick }) => 
         {blog.likes} likes<button onClick={() => handleLikeClick(blog)}>like</button><br/>
         added by {blog.user.name}
       </div>
-      <button onClick={() => handleRemoveClick(blog)}>remove</button>
-    </div>
+    </>
   )
 }
 
-const BlogList = ({ blogs, handleBlogClick, handleLikeClick, handleRemoveClick }) => (
-  <div>
-    {blogs.sort((a,b) => b.likes - a.likes).map(blog =>
-      <Blog key={blog.id} blog={blog} handleBlogClick={handleBlogClick} handleLikeClick={handleLikeClick} handleRemoveClick={handleRemoveClick}/>)}
-  </div>
-)
+const BlogList = ({ blogs, handleBlogClick, handleLikeClick, handleRemoveClick, username }) => {
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: 'solid',
+    borderWidth: 1,
+    marginBottom: 5
+  }
+  return (
+    <>
+      {blogs.sort((a,b) => b.likes - a.likes).map((blog) => { return (
+        <div key={blog.id} style={blogStyle}>
+          <Blog blog={blog} handleBlogClick={handleBlogClick} handleLikeClick={handleLikeClick}/>
+          {username === blog.user.username ? <button onClick={() => handleRemoveClick(blog)}>remove</button> : <></>}
+        </div>
+      )})}
+    </>
+  )
+}
 
 const CreateBlog = (props) => {
   const [ title, setTitle ] = useState('')

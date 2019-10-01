@@ -125,7 +125,7 @@ const App = () => {
           <Togglable showLabel='new blog' hideLabel='cancel' ref={blogFormRef}>
             <CreateBlog handleNotificationCallback={handleNotificationCallback} handleCreateBlogCallback={handleCreateBlogCallback}/>
           </Togglable>
-          <BlogList blogs={blogs} handleBlogClick={handleBlogClick} handleLikeClick={handleLikeClick} handleRemoveClick={handleRemoveClick}/>
+          <BlogList username={user.username} blogs={blogs} handleBlogClick={handleBlogClick} handleLikeClick={handleLikeClick} handleRemoveClick={handleRemoveClick}/>
         </div>
       }
     </div>
