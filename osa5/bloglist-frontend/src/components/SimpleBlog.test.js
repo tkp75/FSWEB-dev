@@ -25,7 +25,6 @@ test('renders author', () => {
 })
 
 test('renders likes', () => {
-  const mockHandler = jest.fn()
   const component = render(<SimpleBlog blog={blog} onClick={mockHandler}/>)
   const div = component.container.querySelector('.simpleblog')
   expect(div).toHaveTextContent(/blog has [0-9]+ likes/)

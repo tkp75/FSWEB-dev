@@ -9,7 +9,7 @@ const Blog = ({ blog, handleBlogClick, handleLikeClick }) => {
       <div onClick={() => handleBlogClick(blog)}>
         {blog.title} {blog.author}
       </div>
-      <div style={showFull}>
+      <div className='blogDetails' style={showFull}>
         <a href={blog.url}>{blog.url}</a><br/>
         {blog.likes} likes<button onClick={() => handleLikeClick(blog)}>like</button><br/>
         added by {blog.user.name}

@@ -7,7 +7,7 @@ const Togglable = React.forwardRef((props, ref) => {
   const showWhenVisible = { display: visible ? '' : 'none' }
   const showLabel = (props.showLabel) ? props.showLabel : 'submit'
   const hideLabel = (props.hideLabel) ? props.hideLabel : 'cancel'
-  
+
   const toggleVisibility = () => {
     setVisible(!visible)
   }
