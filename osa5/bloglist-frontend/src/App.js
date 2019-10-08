@@ -105,7 +105,7 @@ const App = () => {
 
   // Show login form if not logged in
   return (
-    <div className="App">
+    <div className='app'>
       {user === null ?
         <div>
           <h2>Log in to bloglist application</h2>

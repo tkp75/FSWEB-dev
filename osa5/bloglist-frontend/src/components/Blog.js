@@ -9,7 +9,7 @@ const Blog = ({ blog, handleBlogClick, handleLikeClick }) => {
       <div onClick={() => handleBlogClick(blog)}>
         {blog.title} {blog.author}
       </div>
-      <div className='blogDetails' style={showFull}>
+      <div className='blog-details' style={showFull}>
         <a href={blog.url}>{blog.url}</a><br/>
         {blog.likes} likes<button onClick={() => handleLikeClick(blog)}>like</button><br/>
         added by {blog.user.name}
@@ -27,14 +27,14 @@ const BlogList = ({ blogs, username, handleBlogClick, handleLikeClick, handleRem
     marginBottom: 5
   }
   return (
-    <>
+    <div className='blog-list'>
       {blogs.sort((a,b) => b.likes - a.likes).map((blog) => { return (
-        <div key={blog.id} style={blogStyle}>
+        <div key={blog.id} style={blogStyle} className='blog'>
           <Blog blog={blog} handleBlogClick={handleBlogClick} handleLikeClick={handleLikeClick}/>
           {username === blog.user.username ? <button onClick={() => handleRemoveClick(blog)}>remove</button> : <></>}
         </div>
       )})}
-    </>
+    </div>
   )
 }
 
@@ -76,7 +76,7 @@ const CreateBlog = (props) => {
   }
 
   return (
-    <div>
+    <div className='blog-create'>
       <h2>create new</h2>
       <form>
         <div>

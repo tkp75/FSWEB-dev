@@ -2,7 +2,7 @@ import React from 'react'
 
 const LoginForm = (props) => {
   return (
-    <form>
+    <form className='login-form'>
       <div>
         username<input type="text" onChange={props.changeUsernameHandler} name="Username" value={props.username}/>
       </div>

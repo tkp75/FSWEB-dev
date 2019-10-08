@@ -47,10 +47,10 @@ test('show blog details after click', () => {
   const component = render(<Blog blog={blog} handleBlogClick={mockBlogHandler} handleLikeClick={mockLikeHandler} />)
   const divBasic = component.getByText(`${blog.title} ${blog.author}`)
   expect(divBasic).toBeDefined()
-  let divStyle = component.container.querySelector('.blogDetails').style
+  let divStyle = component.container.querySelector('.blog-details').style
   expect(divStyle).toHaveProperty('display', 'none')
   fireEvent.click(divBasic)
-  divStyle = component.container.querySelector('.blogDetails').style
+  divStyle = component.container.querySelector('.blog-details').style
   expect(divStyle).toHaveProperty('display', 'none')
 })
 
