@@ -1,16 +1,16 @@
 import React from 'react'
 
-const LoginForm = (props) => {
+const LoginForm = ({ username, password, loginClickHandler }) => {
   return (
     <form className='login-form'>
       <div>
-        username<input type="text" onChange={props.changeUsernameHandler} name="Username" value={props.username}/>
+        username <input {...username} />
       </div>
       <div>
-        password<input type="password" onChange={props.changePasswordHandler} name="Password" value={props.password}/>
+        password <input {...password} />
       </div>
       <div>
-        <button type="submit" onClick={props.loginClickHandler} name="Login">login</button>
+        <button type="submit" onClick={loginClickHandler} name="Login">login</button>
       </div>
     </form>
   )
