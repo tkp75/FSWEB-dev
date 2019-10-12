@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
-import blogService from '../services/blogs'
+import React from 'react'
 import PropTypes from 'prop-types'
+import  { useField } from '../hooks'
+import blogService from '../services/blogs'
 
 const Blog = ({ blog, handleBlogClick, handleLikeClick }) => {
   const showFull = { display: blog.full ? '' : 'none' }
@@ -46,32 +47,29 @@ BlogList.propTypes = {
   handleRemoveClick: PropTypes.func.isRequired
 }
 
-const CreateBlog = (props) => {
-  const [ title, setTitle ] = useState('')
-  const [ author, setAuthor ] = useState('')
-  const [ url, setUrl ] = useState('')
-  const handleTitleChange = (event) => setTitle(event.target.value)
-  const handleAuthorChange = (event) => setAuthor(event.target.value)
-  const handleUrlChange = (event) => setUrl(event.target.value)
+const CreateBlog = ({ handleCreateBlogCallback, handleNotificationCallback }) => {
+  const title = useField('text')
+  const author = useField('text')
+  const url = useField('url')
   const handleClick = async (event) => {
     event.preventDefault()
-    if (!title && !author && !url) {
-      props.handleNotificationCallback('WARNING: no blog to save', 1, 10000)
+    if (!title.value && !author.value && !url.value) {
+      handleNotificationCallback('WARNING: no blog to save', 1, 10000)
       return
     }
     try {
-      const createResponse = await blogService.create({ title: title, author: author, url: url })
+      const createResponse = await blogService.create({ title: title.value, author: author.value, url: url.value })
       if (!createResponse || createResponse.error) {
-        props.handleNotificationCallback(`ERROR: creating a blog failed\n${createResponse}`, 2, 15000)
+        handleNotificationCallback(`ERROR: creating a blog failed\n${createResponse}`, 2, 15000)
         return
       }
-      props.handleCreateBlogCallback(createResponse)
-      setTitle('')
-      setAuthor('')
-      setUrl('')
-      props.handleNotificationCallback(`INFO: blog saved\n\tTitle: ${title}\n\tAuthor: ${author}`, 0, 5000)
+      handleCreateBlogCallback(createResponse)
+      title.reset()
+      author.reset()
+      url.reset()
+      handleNotificationCallback(`INFO: blog saved\n\tTitle: ${title.value}\n\tAuthor: ${author.value}`, 0, 5000)
     } catch (exception) {
-      props.handleNotificationCallback(`ERROR: creating a blog failed\n${exception}`, 2, 15000)
+      handleNotificationCallback(`ERROR: creating a blog failed\n${exception}`, 2, 15000)
     }
   }
 
@@ -80,13 +78,13 @@ const CreateBlog = (props) => {
       <h2>create new</h2>
       <form>
         <div>
-          title:<input type="text" onChange={handleTitleChange} name="Title" value={title}/>
+          title:<input {...title}/>
         </div>
         <div>
-          author:<input type="text" onChange={handleAuthorChange} name="Author" value={author}/>
+          author:<input {...author}/>
         </div>
         <div>
-          url:<input type="text" onChange={handleUrlChange} name="Url" value={url}/>
+          url:<input {...url}/>
         </div>
         <div>
           <button type="submit" onClick={handleClick} name="Create">create</button>

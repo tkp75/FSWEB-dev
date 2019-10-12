@@ -6,9 +6,13 @@ export const useField = (type) => {
     event.persist()
     setValue(event.target.value.toString())
   }
+  const reset = () => {
+    setValue('')
+  }
   return {
     type,
     value,
     onChange,
+    reset,
   }
 }

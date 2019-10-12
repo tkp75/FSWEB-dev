@@ -55,6 +55,8 @@ const App = () => {
         return
       }
       setUser(loginResponse)
+      username.reset()
+      password.reset()
       blogService.setToken(loginResponse.token)
       window.localStorage.setItem('loggedBloglistUser', JSON.stringify(loginResponse))
     } catch (exception) {
@@ -128,7 +130,7 @@ const App = () => {
           <Notification notification={message}/>
           <p>{user.name} logged in <button type="submit" onClick={handleLogoutCLick} name="Logout">logout</button></p>
           <Togglable showLabel='new blog' hideLabel='cancel' ref={blogFormRef}>
-            <CreateBlog handleNotificationCallback={handleNotificationCallback} handleCreateBlogCallback={handleCreateBlogCallback}/>
+            <CreateBlog handleCreateBlogCallback={handleCreateBlogCallback} handleNotificationCallback={handleNotificationCallback} />
           </Togglable>
           <BlogList username={user.username} blogs={blogs} handleBlogClick={handleBlogClick} handleLikeClick={handleLikeClick} handleRemoveClick={handleRemoveClick}/>
         </div>
