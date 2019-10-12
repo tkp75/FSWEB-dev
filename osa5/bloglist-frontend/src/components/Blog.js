@@ -3,6 +3,12 @@ import PropTypes from 'prop-types'
 import  { useField } from '../hooks'
 import blogService from '../services/blogs'
 
+const dropReset = (obj) => {
+  // eslint-disable-next-line no-unused-vars
+  const { reset, ...newObj } = obj
+  return newObj
+}
+
 const Blog = ({ blog, handleBlogClick, handleLikeClick }) => {
   const showFull = { display: blog.full ? '' : 'none' }
   return (
@@ -72,19 +78,21 @@ const CreateBlog = ({ handleCreateBlogCallback, handleNotificationCallback }) =>
       handleNotificationCallback(`ERROR: creating a blog failed\n${exception}`, 2, 15000)
     }
   }
-
+  const inTitle = dropReset(title)
+  const inAuthor = dropReset(author)
+  const inUrl = dropReset(url)
   return (
     <div className='blog-create'>
       <h2>create new</h2>
       <form>
         <div>
-          title:<input {...title}/>
+          title:<input {...inTitle}/>
         </div>
         <div>
-          author:<input {...author}/>
+          author:<input {...inAuthor}/>
         </div>
         <div>
-          url:<input {...url}/>
+          url:<input {...inUrl}/>
         </div>
         <div>
           <button type="submit" onClick={handleClick} name="Create">create</button>
