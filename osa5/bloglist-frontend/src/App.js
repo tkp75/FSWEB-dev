@@ -79,6 +79,7 @@ const App = () => {
   }
 
   const handleCreateBlogCallback = (newBlog) => {
+    newBlog.user = user
     blogFormRef.current.toggleVisibility()
     setBlogs(blogs.concat(newBlog))
   }
