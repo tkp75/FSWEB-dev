@@ -25,12 +25,32 @@ usersRouter.post('/', async (request, response, next) => {
       username: body.username,
       passwordHash,
       name: body.name,
+      blogs: [],
     })
 
     const savedUser = await user.save()
 
     response.json(savedUser)
   } catch (exception) {
+    next(exception)
+  }
+})
+
+usersRouter.put('/:id', async (request, response, next) => {
+  const body = request.body
+  const user = new User({
+    username: body.username,
+    passwordHash: body.passwordHash,
+    name: body.name,
+    blogs: body.blogs,
+  })
+  try {
+    await user
+      .findByIdAndUpdate(request.params.id, user, { new: true })
+      .then(updatedUser => {
+        response.json(updatedUser.toJSON)
+      })
+  } catch(exception) {
     next(exception)
   }
 })
