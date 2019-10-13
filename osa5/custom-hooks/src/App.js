@@ -18,11 +18,26 @@ const useField = (type) => {
 
 const useResource = (baseUrl) => {
   const [resources, setResources] = useState([])
+  const [token, setToken] = useState(null)
 
-  // ...
+  const getAll = () => {
+    const request = axios.get(baseUrl)
+    return request.then(response => { setResources(response.data); return response.data })
+  }
 
-  const create = (resource) => {
-    // ...
+  const create = async newObject => {
+    const config = {
+      headers: { Authorization: `bearer ${token}` },
+    }
+  
+    const response = await axios.post(baseUrl, newObject, config)
+    setResources([...resources, response.data])
+    return response.data
+  }
+
+  const update = (id, newObject) => {
+    const request = axios.put(`${ baseUrl } /${id}`, newObject)
+    return request.then(response => response.data)
   }
 
   const service = {
@@ -30,7 +45,7 @@ const useResource = (baseUrl) => {
   }
 
   return [
-    resources, service
+    resources, { service, getAll, create, update, setToken }
   ]
 }
 
@@ -52,6 +67,12 @@ const App = () => {
     personService.create({ name: name.value, number: number.value})
   }
 
+  useEffect(() => {
+    noteService.getAll()
+    personService.getAll()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  
   return (
     <div>
       <h2>notes</h2>
@@ -59,7 +80,8 @@ const App = () => {
         <input {...content} />
         <button>create</button>
       </form>
-      {notes.map(n => <p key={n.id}>{n.content}</p>)}
+      { notes.length > 0 ?
+        notes.map(n => <p key={n.id}>{n.content}</p>) : <></> }
 
       <h2>persons</h2>
       <form onSubmit={handlePersonSubmit}>
@@ -67,7 +89,8 @@ const App = () => {
         number <input {...number} />
         <button>create</button>
       </form>
-      {persons.map(n => <p key={n.id}>{n.name} {n.number}</p>)}
+      { persons.length > 0 ?
+        persons.map(n => <p key={n.id}>{n.name} {n.number}</p>) : <></> }
     </div>
   )
 }
