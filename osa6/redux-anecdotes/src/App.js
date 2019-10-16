@@ -13,6 +13,18 @@ const App = (props) => {
     })
   }
 
+  const create = (event) => {
+    event.preventDefault()
+    //console.log('create',event.target.create.value)
+    props.store.dispatch({
+      type: 'CREATE',
+      data: {
+        content: event.target.create.value
+      }
+    })
+    event.target.create.value=''
+  }
+
   return (
     <div>
       <h2>Anecdotes</h2>
@@ -28,9 +40,9 @@ const App = (props) => {
         </div>
       )}
       <h2>create new</h2>
-      <form>
-        <div><input /></div>
-        <button>create</button>
+      <form onSubmit={create}>
+        <div><input name='create'/></div>
+        <button type='submit'>create</button>
       </form>
     </div>
   )

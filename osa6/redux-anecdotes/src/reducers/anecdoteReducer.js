@@ -34,8 +34,7 @@ const reducer = (state = initialState, action) => {
           } 
         )
     case 'CREATE':
-      console.log('CREATE is not implemented (yet)')
-      return state
+      return state.concat(asObject(action.data.content))
     default: return state
   }
 }
