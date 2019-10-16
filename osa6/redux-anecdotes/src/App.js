@@ -1,27 +1,16 @@
 import React from 'react';
+import { createAnecdote, voteAnecdote } from './reducers/anecdoteReducer'
 
 const App = (props) => {
   const anecdotes = props.store.getState()
 
-  const vote = (id) => {
-    //console.log('vote', id)
-    props.store.dispatch({
-      type: 'VOTE',
-      data: {
-        id: id
-      }
-    })
+  const handleVote = (id) => {
+    props.store.dispatch(voteAnecdote(id))
   }
 
-  const create = (event) => {
+  const handleCreate = (event) => {
     event.preventDefault()
-    //console.log('create',event.target.create.value)
-    props.store.dispatch({
-      type: 'CREATE',
-      data: {
-        content: event.target.create.value
-      }
-    })
+    props.store.dispatch(createAnecdote(event.target.create.value))
     event.target.create.value=''
   }
 
@@ -35,12 +24,12 @@ const App = (props) => {
           </div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id)}>vote</button>
+            <button onClick={() => handleVote(anecdote.id)}>vote</button>
           </div>
         </div>
       )}
       <h2>create new</h2>
-      <form onSubmit={create}>
+      <form onSubmit={handleCreate}>
         <div><input name='create'/></div>
         <button type='submit'>create</button>
       </form>
