@@ -2,21 +2,21 @@ const initialState = null
 
 export const setNotification = (notification) => {
   return {
-    type: 'SET',
+    type: 'SHOW',
     notification: notification
   }
 }
 
 export const unsetNotification = () => {
   return {
-    type: 'UNSET'
+    type: 'HIDE'
   }
 }
 
 const notificationReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'SET': return action.notification
-    case 'UNSET': return null
+    case 'SHOW': return action.notification
+    case 'HIDE': return null
     default: return state
   }
 }
