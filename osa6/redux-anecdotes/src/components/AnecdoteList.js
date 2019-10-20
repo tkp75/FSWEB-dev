@@ -1,22 +1,19 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { voteAnecdote } from '../reducers/anecdoteReducer'
 import { setNotification, unsetNotification } from '../reducers/notificationReducer'
 
 const AnecdoteList = (props) => {
-  let { anecdotes, filter } = props.store.getState()
-  if(filter !== null) anecdotes = props.store.getState().anecdotes.filter(a => a.content.includes(filter))
-  anecdotes = anecdotes.sort((a,b) => b.votes-a.votes)
 
   const handleVote = (id) => {
-    props.store.dispatch(voteAnecdote(id))
-    props.store.dispatch(setNotification(`you voted '${anecdotes.find(a => a.id === id).content}'`))
-    setTimeout(() => props.store.dispatch(unsetNotification()), 5000)
-
+    props.voteAnecdote(id)
+    props.setNotification(`you voted '${props.anecdotes.find(a => a.id === id).content}'`)
+    setTimeout(() => props.unsetNotification(), 5000)
   }
 
   return (
     <div>
-      {anecdotes.map(anecdote =>
+      {props.anecdotes.map(anecdote =>
         <div key={anecdote.id}>
          <div>
             {anecdote.content}
@@ -31,4 +28,23 @@ const AnecdoteList = (props) => {
   )
 }
 
-export default AnecdoteList
+const anecdotesToShow = (anecdotes, filter) => {
+  if(filter !== null) anecdotes = anecdotes.filter(a => a.content.includes(filter))
+  return anecdotes.sort((a,b) => b.votes-a.votes)
+}
+
+const mapStateToProps = (state) => {
+  // joskus on hyödyllistä tulostaa mapStateToProps:ista...
+  console.log(state)
+  return {
+    anecdotes: anecdotesToShow(state.anecdotes, state.filter)
+  }
+}
+const mapDispatchToProps = {
+  voteAnecdote,
+  setNotification,
+  unsetNotification,
+}
+
+const ConnectedAnecdoteList = connect(mapStateToProps,mapDispatchToProps)(AnecdoteList)
+export default ConnectedAnecdoteList
