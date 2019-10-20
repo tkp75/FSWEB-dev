@@ -34,8 +34,6 @@ const anecdotesToShow = (anecdotes, filter) => {
 }
 
 const mapStateToProps = (state) => {
-  // joskus on hyödyllistä tulostaa mapStateToProps:ista...
-  console.log(state)
   return {
     anecdotes: anecdotesToShow(state.anecdotes, state.filter)
   }
