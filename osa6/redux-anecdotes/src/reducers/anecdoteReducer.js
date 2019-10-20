@@ -1,17 +1,7 @@
-const getId = () => (100000 * Math.random()).toFixed(0)
-
-const asObject = (anecdote) => {
-  return {
-    content: anecdote,
-    id: getId(),
-    votes: 0
-  }
-}
-
-export const createAnecdote = (content) => {
+export const createAnecdote = (anecdote) => {
   return {
     type: 'CREATE',
-    data: asObject(content)
+    data: anecdote
   }
 }
 
