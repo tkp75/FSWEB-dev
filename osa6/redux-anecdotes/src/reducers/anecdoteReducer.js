@@ -11,9 +11,14 @@ export const createAnecdote = (content) => {
 }
 
 export const voteAnecdote = (id) => {
-  return {
-    type: 'VOTE',
-    data: { id }
+  return async dispatch => {
+    const anecdote = await anecdoteService.get(id)
+    anecdote.votes=anecdote.votes+1
+    await anecdoteService.modify(anecdote)
+    dispatch({
+      type: 'VOTE',
+      data: { id }
+    })
   }
 }
 
