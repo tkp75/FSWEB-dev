@@ -9,7 +9,7 @@ const AnecdoteForm = (props) => {
     event.preventDefault()
     event.persist()
     props.createAnecdote(event.target.create.value)
-    props.setNotification(`you created '${event.target.create.value}'`, 5000)
+    props.setNotification(`you created '${event.target.create.value}'`, 5)
     event.target.create.value=''
   }
 

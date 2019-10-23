@@ -8,7 +8,7 @@ export const setNotification = (content,duration) => {
     })
     setTimeout(() => {
       dispatch({ type: 'HIDE' })
-    }, duration)
+    }, duration*1000)
   }
 }
 
