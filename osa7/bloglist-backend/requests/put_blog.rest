@@ -1,0 +1,9 @@
+PUT http://localhost:3003/api/blogs/5d7d1b52fa7e3728481997c5
+Content-Type: application/json
+
+{
+    "title": "Otsikko",
+    "author": "Kirjailija",
+    "url": "http://inter.net/kirja?id=1",
+    "likes": 1
+}

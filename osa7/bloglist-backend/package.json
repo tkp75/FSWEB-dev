@@ -1,0 +1,38 @@
+{
+  "name": "bloglist-backend",
+  "version": "1.0.0",
+  "description": "Full Stack Open 2019: osa 7 - bloglist-backend",
+  "main": "index.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node index.js",
+    "watch": "cross-env NODE_ENV=development nodemon index.js",
+    "lint": "eslint .",
+    "test": "cross-env NODE_ENV=test jest --verbose --testTimeout=10000 --runInBand"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tkp75/FSWEB-dev/tree/master/osa7/bloglist-backend"
+  },
+  "keywords": [
+    "fullstack"
+  ],
+  "author": "tommi.pakarinen@helsinki.fi",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "cors": "^2.8.5",
+    "dotenv": "^8.1.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.15",
+    "mongoose": "^5.6.13",
+    "mongoose-unique-validator": "^2.0.3"
+  },
+  "devDependencies": {
+    "cross-env": "^5.2.1",
+    "eslint": "^6.3.0",
+    "jest": "^24.9.0",
+    "nodemon": "^1.19.2",
+    "supertest": "^4.0.2"
+  }
+}
