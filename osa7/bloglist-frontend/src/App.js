@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import  { useField } from './hooks'
+import { connect } from 'react-redux'
+import { setNotification } from './reducers/notificationReducer'
+import { useField } from './hooks'
 import LoginForm from './components/Login'
 import { BlogList, CreateBlog } from './components/Blog'
 import Notification from './components/Notification'
@@ -7,12 +9,11 @@ import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
-const App = () => {
+const App = (props) => {
   const username = useField('text')
   const password = useField('password')
   const [ user, setUser ] = useState(null)
   const [ blogs, setBlogs ] = useState([])
-  const [ message, setMessage ] = useState({ level: -1 })
 
   useEffect(() => {
     blogService
@@ -37,8 +38,7 @@ const App = () => {
   const handleLoginClick = async (event) => {
     event.preventDefault()
     if (!username.value || !password.value) {
-      setMessage({ text: 'WARNING: invalid username or password', level: 1 })
-      setTimeout(() => setMessage({ level: -1 }), 10000)
+      props.setNotification('WARNING: invalid username or password', 1, 10)
       setUser(null)
       window.localStorage.removeItem('loggedBloglistUser')
       return
@@ -48,8 +48,7 @@ const App = () => {
     try {
       const loginResponse = await loginService.login({ username: currentUser, password: currentPassword })
       if (!loginResponse || !loginResponse.token) {
-        setMessage({ text: 'ERROR: wrong username or password', level: 2 })
-        setTimeout(() => setMessage({ level: -1 }), 15000)
+        props.setNotification('ERROR: wrong username or password', 2, 15)
         setUser(null)
         window.localStorage.removeItem('loggedBloglistUser')
         return
@@ -60,8 +59,7 @@ const App = () => {
       blogService.setToken(loginResponse.token)
       window.localStorage.setItem('loggedBloglistUser', JSON.stringify(loginResponse))
     } catch (exception) {
-      setMessage({ text: `ERROR: login failed\n${exception}`, level: 2 })
-      setTimeout(() => setMessage({ level: -1 }), 15000)
+      props.setNotification(`ERROR: login failed\n${exception}`, 2, 15)
       setUser(null)
       window.localStorage.removeItem('loggedBloglistUser')
     }
@@ -74,8 +72,7 @@ const App = () => {
   }
 
   const handleNotificationCallback = (text, level, duration)  => {
-    setMessage({ text: text, level: level })
-    setTimeout(() => setMessage({ level: -1 }), duration)
+    props.setNotification(text, level, duration)
   }
 
   const handleCreateBlogCallback = (newBlog) => {
@@ -119,7 +116,7 @@ const App = () => {
       {user === null ?
         <div>
           <h2>Log in to bloglist application</h2>
-          <Notification notification={message} />
+          <Notification />
           <LoginForm
             username={username}
             password={password}
@@ -128,7 +125,7 @@ const App = () => {
         </div> :
         <div>
           <h2>blogs</h2>
-          <Notification notification={message}/>
+          <Notification />
           <p>{user.name} logged in <button type="submit" onClick={handleLogoutCLick} name="Logout">logout</button></p>
           <Togglable showLabel='new blog' hideLabel='cancel' ref={blogFormRef}>
             <CreateBlog handleCreateBlogCallback={handleCreateBlogCallback} handleNotificationCallback={handleNotificationCallback} />
@@ -140,5 +137,8 @@ const App = () => {
   )
 }
 
-
-export default App
+const mapDispatchToProps = {
+  setNotification,
+}
+const ConnectedApp = connect(null,mapDispatchToProps)(App)
+export default ConnectedApp

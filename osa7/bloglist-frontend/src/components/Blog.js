@@ -60,22 +60,22 @@ const CreateBlog = ({ handleCreateBlogCallback, handleNotificationCallback }) =>
   const handleClick = async (event) => {
     event.preventDefault()
     if (!title.value && !author.value && !url.value) {
-      handleNotificationCallback('WARNING: no blog to save', 1, 10000)
+      handleNotificationCallback('WARNING: no blog to save', 1, 10)
       return
     }
     try {
       const createResponse = await blogService.create({ title: title.value, author: author.value, url: url.value })
       if (!createResponse || createResponse.error) {
-        handleNotificationCallback(`ERROR: creating a blog failed\n${createResponse}`, 2, 15000)
+        handleNotificationCallback(`ERROR: creating a blog failed\n${createResponse}`, 2, 15)
         return
       }
       handleCreateBlogCallback(createResponse)
       title.reset()
       author.reset()
       url.reset()
-      handleNotificationCallback(`INFO: blog saved\n\tTitle: ${title.value}\n\tAuthor: ${author.value}`, 0, 5000)
+      handleNotificationCallback(`INFO: blog saved\n\tTitle: ${title.value}\n\tAuthor: ${author.value}`, 0, 5)
     } catch (exception) {
-      handleNotificationCallback(`ERROR: creating a blog failed\n${exception}`, 2, 15000)
+      handleNotificationCallback(`ERROR: creating a blog failed\n${exception}`, 2, 15)
     }
   }
   const inTitle = dropReset(title)

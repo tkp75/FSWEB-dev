@@ -1,6 +1,7 @@
 import React from 'react'
+import { connect } from 'react-redux'
 
-const Notification = ({ notification }) => {
+const Notification = (props) => {
   const styleList = [
     { // INFO
       padding: 10,
@@ -33,14 +34,24 @@ const Notification = ({ notification }) => {
       fontSize: 20
     }
   ]
-  if (notification.level < 0 || notification.level >= styleList.length) {
-    return null
+  if (props.notification === null || props.notification.level < 0 || props.notification.level >= styleList.length) {
+    return (
+      <div className="notification">
+      </div>
+    )
   }
   return (
-    <div className="notification" style={styleList[notification.level]}>
-      <pre>{notification.text}</pre>
+    <div className="notification" style={styleList[props.notification.level]}>
+      {props.notification}
     </div>
   )
 }
 
-export default Notification
+const mapStateToProps = (state) => {
+  return {
+    notification: state.notification,
+  }
+}
+
+const ConnectedNotification = connect(mapStateToProps)(Notification)
+export default ConnectedNotification
