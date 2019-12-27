@@ -15,3 +15,10 @@ const render = () => {
 
 render()
 store.subscribe(render)
+/*
+store.subscribe(() => {
+  const storeNow = store.getState()
+  console.log(storeNow)
+  render()
+})
+*/

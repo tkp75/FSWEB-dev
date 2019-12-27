@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { setNotification } from './reducers/notificationReducer'
+import { initBlogs } from './reducers/blogReducer'
 import { useField } from './hooks'
 import LoginForm from './components/Login'
-import { BlogList, CreateBlog } from './components/Blog'
+import BlogList, { ConnectedCreateBlog as CreateBlog } from './components/Blog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
@@ -13,13 +14,10 @@ const App = (props) => {
   const username = useField('text')
   const password = useField('password')
   const [ user, setUser ] = useState(null)
-  const [ blogs, setBlogs ] = useState([])
 
   useEffect(() => {
-    blogService
-      .getAll().then(initialNotes => {
-        setBlogs(initialNotes)
-      })
+    props.initBlogs()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -71,45 +69,6 @@ const App = (props) => {
     window.localStorage.removeItem('loggedBloglistUser')
   }
 
-  const handleNotificationCallback = (text, level, duration)  => {
-    props.setNotification(text, level, duration)
-  }
-
-  const handleCreateBlogCallback = (newBlog) => {
-    newBlog.user = user
-    blogFormRef.current.toggleVisibility()
-    setBlogs(blogs.concat(newBlog))
-  }
-
-  const handleBlogClick = (blog) => {
-    if (blog.full === true) blog.full = false
-    else  blog.full = true
-    const blogIndex = blogs.findIndex(b => b.id === blog.id)
-    const newBlogs = Object.assign([], blogs, { [blogIndex]: blog })
-    setBlogs(newBlogs)
-  }
-
-  const handleLikeClick = (blog) => {
-    blog.likes++
-    blogService.update({
-      id: blog.id,
-      user: blog.user.id,
-      likes: blog.likes,
-      author: blog.author,
-      title: blog.title,
-      url: blog.url
-    })
-    const blogIndex = blogs.findIndex(b => b.id === blog.id)
-    const newBlogs = Object.assign([], blogs, { [blogIndex]: blog })
-    setBlogs(newBlogs)
-  }
-
-  const handleRemoveClick = (blog) => {
-    blogService.remove(blog.id)
-    const newBlogs = blogs.filter(b => b.id!==blog.id)
-    setBlogs(newBlogs)
-  }
-
   // Show login form if not logged in
   return (
     <div className='app'>
@@ -128,9 +87,9 @@ const App = (props) => {
           <Notification />
           <p>{user.name} logged in <button type="submit" onClick={handleLogoutCLick} name="Logout">logout</button></p>
           <Togglable showLabel='new blog' hideLabel='cancel' ref={blogFormRef}>
-            <CreateBlog handleCreateBlogCallback={handleCreateBlogCallback} handleNotificationCallback={handleNotificationCallback} />
+            <CreateBlog user={user} />
           </Togglable>
-          <BlogList username={user.username} blogs={blogs} handleBlogClick={handleBlogClick} handleLikeClick={handleLikeClick} handleRemoveClick={handleRemoveClick}/>
+          <BlogList username={user.username} />
         </div>
       }
     </div>
@@ -139,6 +98,7 @@ const App = (props) => {
 
 const mapDispatchToProps = {
   setNotification,
+  initBlogs,
 }
 const ConnectedApp = connect(null,mapDispatchToProps)(App)
 export default ConnectedApp
