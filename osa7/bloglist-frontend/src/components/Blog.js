@@ -43,7 +43,7 @@ const BlogList = (props) => {
       {props.blogs.sort((a,b) => b.likes - a.likes).map((blog) => { return (
         <div key={blog.id} style={blogStyle} className='blog'>
           <Blog blog={blog} toggleBlog={props.toggleBlog} likeBlog={props.likeBlog}/>
-          {props.username === blog.user.username ? <button onClick={() => props.removeBlog(blog.id)}>remove</button> : <></>}
+          {props.user.username === blog.user.username ? <button onClick={() => props.removeBlog(blog.id)}>remove</button> : <></>}
         </div>
       )})}
     </div>
@@ -51,13 +51,14 @@ const BlogList = (props) => {
 }
 BlogList.propTypes = {
   blogs: PropTypes.array.isRequired,
-  username: PropTypes.string.isRequired,
+  user: PropTypes.object.isRequired,
 }
 
 const CreateBlog = (props) => {
   const title = useField('text')
   const author = useField('text')
   const url = useField('url')
+
   const handleClick = async (event) => {
     event.preventDefault()
     if (!title.value && !author.value && !url.value) {
@@ -70,6 +71,7 @@ const CreateBlog = (props) => {
     author.reset()
     url.reset()
   }
+
   const inTitle = dropReset(title)
   const inAuthor = dropReset(author)
   const inUrl = dropReset(url)
@@ -97,6 +99,7 @@ const CreateBlog = (props) => {
 const mapStateToProps = (state) => {
   return {
     blogs: state.blogs,
+    user: state.login,
   }
 }
 const mapDispatchToProps = {
@@ -108,4 +111,4 @@ const mapDispatchToProps = {
 }
 const ConnectedBlogList = connect(mapStateToProps,mapDispatchToProps)(BlogList)
 export default ConnectedBlogList
-export const ConnectedCreateBlog = connect(null,mapDispatchToProps)(CreateBlog)
+export const ConnectedCreateBlog = connect(mapStateToProps,mapDispatchToProps)(CreateBlog)

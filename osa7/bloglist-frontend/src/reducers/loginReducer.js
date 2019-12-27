@@ -1,10 +1,28 @@
+import blogService from '../services/blogs'
+
 const initialState = null
 
-// TODO: This is a dummy reducer to get compile working, functionality is missing!
+export const setUser = (loggedUser) => {
+  window.localStorage.setItem('loggedBloglistUser', JSON.stringify(loggedUser))
+  blogService.setToken(loggedUser.token)
+  return {
+    type: 'LOGIN',
+    user: loggedUser,
+  }
+}
+
+export const unsetUser = () => {
+  window.localStorage.removeItem('loggedBloglistUser')
+  //blogService.setToken(null)
+  return {
+    type: 'LOGOUT',
+  }
+}
+
 const loginReducer = (state = initialState, action) => {
   switch (action.type) {
-  case 'LOGIN': return action.login
-  case 'LOGOUT': return null
+  case 'LOGIN': return action.user
+  case 'LOGOUT': return initialState
   default: return state
   }
 }
