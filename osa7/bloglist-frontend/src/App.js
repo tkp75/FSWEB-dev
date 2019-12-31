@@ -1,70 +1,45 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
-import { initBlogs } from './reducers/blogReducer'
-import { setUser, unsetUser } from './reducers/loginReducer'
-import LoginForm from './components/Login'
-import BlogList, { ConnectedCreateBlog as CreateBlog } from './components/Blog'
-import Notification from './components/Notification'
-import Togglable from './components/Togglable'
-
-const App = (props) => {
-
-  // Load all blogs from backend
-  useEffect(() => {
-    props.initBlogs()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  // Load user information from browser
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
-    if (loggedUserJSON) {
-      const loggedUser = JSON.parse(loggedUserJSON)
-      if (loggedUser.token) {
-        props.setUser(loggedUser)
-      }
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const blogFormRef = React.createRef()
-
-  // Show login form if not logged in
-  return (
-    <div className='app'>
-      {props.user === null ?
-        <div>
-          <h2>Log in to bloglist application</h2>
-          <Notification />
-          <LoginForm />
-        </div> :
-        <div>
-          <h2>blogs</h2>
-          <Notification />
-          <p>{props.user.name} logged in <button type="submit" onClick={(event) => {
-            event.preventDefault()
-            props.unsetUser()
-          }} name="Logout">logout</button></p>
-          <Togglable showLabel='new blog' hideLabel='cancel' ref={blogFormRef}>
-            <CreateBlog />
-          </Togglable>
-          <BlogList />
-        </div>
-      }
-    </div>
-  )
-}
-
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { TogglableBlogList, ConnectedPlainBlog as PlainBlog, ConnectedPlainBlogList as PlainBlogList } from './components/Blog'
+import { ConnectedHeader as Header, Loading, ConnectedUninit as Uninit, ConnectedProtectedRoute as ProtectedRoute } from './components/Helper'
+import { ConnectedLoginForm as LoginForm } from './components/Login'
+import { ConnectedUserList as UserList, ConnectedUser as User } from './components/Users'
 
 const mapStateToProps = (state) => {
   return {
-    user: state.login,
+    init: state.init,
   }
 }
-const mapDispatchToProps = {
-  initBlogs,
-  setUser,
-  unsetUser,
+
+const App = (props) => {
+  return (
+    <div className='app'>
+      <Router>
+        <Header/>
+        {
+          // eslint-disable-next-line eqeqeq
+          (props.init == null || props.init.blogs != true || props.init.users != true || props.init.login != true)
+            ?
+            <Switch>
+              <Route exact path="/login"> <LoginForm /> </Route>
+              <Route exact path="/logout"> <Uninit /> </Route>
+              <Route path="/" > <Loading /> </Route>
+            </Switch>
+            :
+            <div>
+              <Route exact path="/login"> <LoginForm /> </Route>
+              <Route exact path="/logout"> <Uninit /> </Route>
+              <ProtectedRoute exact path="/"> <TogglableBlogList /> </ProtectedRoute>
+              <ProtectedRoute exact path="/users"> <UserList /> </ProtectedRoute>
+              <ProtectedRoute exact path="/users/:id"> <User /> </ProtectedRoute>
+              <ProtectedRoute exact path="/blogs"> <PlainBlogList /> </ProtectedRoute>
+              <ProtectedRoute exact path="/blogs/:id"> <PlainBlog /> </ProtectedRoute>
+            </div>
+        }
+      </Router>
+    </div>
+  )
 }
-const ConnectedApp = connect(mapStateToProps,mapDispatchToProps)(App)
+const ConnectedApp = connect(mapStateToProps)(App)
 export default ConnectedApp
