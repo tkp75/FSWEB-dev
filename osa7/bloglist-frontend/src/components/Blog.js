@@ -2,9 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import  { useField } from '../hooks'
+import { useField } from '../hooks'
 import Togglable from '../components/Togglable'
-import { createBlog, likeBlog, removeBlog, toggleBlog } from '../reducers/blogReducer'
+import { createBlog, likeBlog, removeBlog, toggleBlog, createComment } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
 const mapStateToProps = (state) => {
@@ -18,6 +18,7 @@ const mapDispatchToProps = {
   likeBlog,
   removeBlog,
   toggleBlog,
+  createComment,
   setNotification,
 }
 
@@ -130,12 +131,38 @@ export const TogglableBlogList = () => {
   )
 }
 
-const Comments = (props) => (
-  <div>
-    <h3>Comments</h3>
-    <ul>{props.comments.map((comment,index) => <li key={index}>{comment}</li>)}</ul>
-  </div>
-)
+const Comments = (props) => {
+  const blogId = props.id
+  const comments = props.comments
+  const newComment = useField('text')
+  const inNewComment = dropReset(newComment)
+  const handleClick = async (event) => {
+    event.preventDefault()
+    if (!newComment.value) {
+      props.setNotification('WARNING: no comment to save', 1, 10)
+      return
+    }
+    props.createComment(newComment.value, blogId)
+    props.setNotification(`INFO: comment saved\n\tBlog ID: ${blogId}\n\tComment: ${newComment.value}`, 0, 5)
+    newComment.reset()
+  }
+
+  return (
+    <div>
+      <h3>Comments</h3>
+      <div className='comment-create'>
+        <form>
+          <div>
+            <input {...inNewComment}/>
+            <button type="submit" onClick={handleClick} name="Create">create</button>
+          </div>
+        </form>
+      </div>
+      <ul>{comments.map((comment,index) => <li key={index}>{comment}</li>)}</ul>
+    </div>
+  )
+}
+const ConnectedComments = connect(mapStateToProps,mapDispatchToProps)(Comments)
 
 const SingleBlog = (props) => {
   const { id } = useParams()
@@ -152,9 +179,7 @@ const SingleBlog = (props) => {
       {blog.likes} likes<button onClick={() => props.likeBlog(blog)}>like</button><br/>
       added by <a href={'/users/'+blog.user.id}>{blog.user.name}</a><br/>
       {props.user.username === blog.user.username ? <button onClick={() => props.removeBlog(blog.id)}>remove</button> : <></>}
-      { // eslint-disable-next-line eqeqeq
-        (blog.comments != null && blog.comments.length > 0) ? <Comments comments={blog.comments}/> : <></>
-      }
+      <ConnectedComments id={blog.id} comments={blog.comments}/>
     </div>
   )
 }

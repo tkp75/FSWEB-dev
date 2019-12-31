@@ -61,6 +61,20 @@ export const toggleBlog = (blog) => {
   }
 }
 
+export const createComment = ( comment, id) => {
+  const commentObj = {
+    comment: comment
+  }
+  return async dispatch => {
+    const updatedBlog = await blogService.comment(commentObj,id)
+    dispatch ({
+      type: 'UPDATE',
+      data: updatedBlog,
+    })
+  }
+}
+
+
 const blogReducer = (state = initialState, action) => {
   switch(action.type) {
   case 'INIT_BLOGS':
