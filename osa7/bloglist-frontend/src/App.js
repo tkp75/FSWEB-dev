@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import { TogglableBlogList, ConnectedPlainBlog as PlainBlog, ConnectedPlainBlogList as PlainBlogList } from './components/Blog'
+import { TogglableBlogList, ConnectedSingleBlog as SingleBlog, ConnectedPlainBlogList as PlainBlogList } from './components/Blog'
 import { ConnectedHeader as Header, Loading, ConnectedUninit as Uninit, ConnectedProtectedRoute as ProtectedRoute } from './components/Helper'
 import { ConnectedLoginForm as LoginForm } from './components/Login'
 import { ConnectedUserList as UserList, ConnectedUser as User } from './components/Users'
@@ -34,7 +34,7 @@ const App = (props) => {
               <ProtectedRoute exact path="/users"> <UserList /> </ProtectedRoute>
               <ProtectedRoute exact path="/users/:id"> <User /> </ProtectedRoute>
               <ProtectedRoute exact path="/blogs"> <PlainBlogList /> </ProtectedRoute>
-              <ProtectedRoute exact path="/blogs/:id"> <PlainBlog /> </ProtectedRoute>
+              <ProtectedRoute exact path="/blogs/:id"> <SingleBlog /> </ProtectedRoute>
             </div>
         }
       </Router>

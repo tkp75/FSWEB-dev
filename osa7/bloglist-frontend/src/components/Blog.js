@@ -130,20 +130,46 @@ export const TogglableBlogList = () => {
   )
 }
 
-const PlainBlog = (props) => {
+const Comments = (props) => (
+  <div>
+    <h3>Comments</h3>
+    <ul>{props.comments.map((comment,index) => <li key={index}>{comment}</li>)}</ul>
+  </div>
+)
+
+const SingleBlog = (props) => {
   const { id } = useParams()
-  let blog = null
-  // eslint-disable-next-line eqeqeq
-  if(props.blog != null) blog=props.blog
-  else blog = props.blogs.find(b => b.id === id)
+  const blog = props.blogs.find(b => b.id === id)
   // eslint-disable-next-line eqeqeq
   if(blog == null) {
-    // TODO: investigate why PlainBlog ends up here two times before it finds the blog
+    //TODO: Check why props.blogs is empty at first
+    return <div className='single-blog'></div>
+  }
+  return (
+    <div style={blogStyle} className='single-blog'>
+      <h3>{blog.title} by {blog.author}</h3>
+      <a href={blog.url}>{blog.url}</a><br/>
+      {blog.likes} likes<button onClick={() => props.likeBlog(blog)}>like</button><br/>
+      added by <a href={'/users/'+blog.user.id}>{blog.user.name}</a><br/>
+      {props.user.username === blog.user.username ? <button onClick={() => props.removeBlog(blog.id)}>remove</button> : <></>}
+      { // eslint-disable-next-line eqeqeq
+        (blog.comments != null && blog.comments.length > 0) ? <Comments comments={blog.comments}/> : <></>
+      }
+    </div>
+  )
+}
+export const ConnectedSingleBlog = connect(mapStateToProps,mapDispatchToProps)(SingleBlog)
+
+const PlainBlog = (props) => {
+  const blog = props.blog
+  // eslint-disable-next-line eqeqeq
+  if(blog == null) {
+    props.setNotification('ERROR: No blog found', 2, 15)
     return <div className='plain-blog'></div>
   }
   return (
     <div style={blogStyle} className='plain-blog'>
-      <h3>{blog.title} by {blog.author}</h3>
+      <h3><a href={'/blogs/'+blog.id}>{blog.title} by {blog.author}</a></h3>
       <a href={blog.url}>{blog.url}</a><br/>
       {blog.likes} likes<button onClick={() => props.likeBlog(blog)}>like</button><br/>
       added by <a href={'/users/'+blog.user.id}>{blog.user.name}</a><br/>
@@ -151,7 +177,7 @@ const PlainBlog = (props) => {
     </div>
   )
 }
-export const ConnectedPlainBlog = connect(mapStateToProps,mapDispatchToProps)(PlainBlog)
+const ConnectedPlainBlog = connect(mapStateToProps,mapDispatchToProps)(PlainBlog)
 
 const PlainBlogList = (props) => {
   // eslint-disable-next-line eqeqeq

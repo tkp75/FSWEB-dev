@@ -18,7 +18,7 @@ store.subscribe(render)
 /*
 store.subscribe(() => {
   const storeNow = store.getState()
-  console.log(storeNow)
+  console.log('DEBUG: store\n',storeNow)
   render()
 })
 */
