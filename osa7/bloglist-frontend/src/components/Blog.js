@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useField } from '../hooks'
+import { Form, Button } from 'semantic-ui-react'
 import Togglable from '../components/Togglable'
 import { createBlog, likeBlog, removeBlog, toggleBlog, createComment } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
@@ -48,7 +49,7 @@ const Blog = (props) => {
       </div>
       <div className='blog-details' style={showFull}>
         <a href={blog.url}>{blog.url}</a><br/>
-        {blog.likes} likes<button onClick={() => props.likeBlog(blog)}>like</button><br/>
+        {blog.likes} likes<Button onClick={() => props.likeBlog(blog)}>like</Button><br/>
         added by {blog.user.name}
       </div>
     </>
@@ -64,7 +65,7 @@ const BlogList = (props) => {
       {props.blogs.sort((a,b) => b.likes - a.likes).map((blog) => { return (
         <div key={blog.id} style={blogStyle} className='blog'>
           <ConnectedBlog blog={blog} />
-          {props.user.username === blog.user.username ? <button onClick={() => props.removeBlog(blog.id)}>remove</button> : <></>}
+          {props.user.username === blog.user.username ? <Button onClick={() => props.removeBlog(blog.id)}>remove</Button> : <></>}
         </div>
       )})}
     </div>
@@ -100,20 +101,21 @@ const CreateBlog = (props) => {
   return (
     <div className='blog-create'>
       <h2>create new</h2>
-      <form>
-        <div>
-          title:<input {...inTitle}/>
-        </div>
-        <div>
-          author:<input {...inAuthor}/>
-        </div>
-        <div>
-          url:<input {...inUrl}/>
-        </div>
-        <div>
-          <button type="submit" onClick={handleClick} name="Create">create</button>
-        </div>
-      </form>
+      <Form>
+        <Form.Field>
+          <label>title</label>
+          <input {...inTitle}/>
+        </Form.Field>
+        <Form.Field>
+          <label>author</label>
+          <input {...inAuthor}/>
+        </Form.Field>
+        <Form.Field>
+          <label>url</label>
+          <input {...inUrl}/>
+        </Form.Field>
+        <Button type="submit" onClick={handleClick} name="Create">create</Button>
+      </Form>
     </div>
   )
 }
@@ -148,16 +150,14 @@ const Comments = (props) => {
   }
 
   return (
-    <div>
+    <div className='comments'>
       <h3>Comments</h3>
-      <div className='comment-create'>
-        <form>
-          <div>
-            <input {...inNewComment}/>
-            <button type="submit" onClick={handleClick} name="Create">create</button>
-          </div>
-        </form>
-      </div>
+      <Form className='comment-create'>
+        <Form.Field>
+          <input {...inNewComment}/>
+        </Form.Field>
+        <Button type="submit" onClick={handleClick} name="Create">create</Button>
+      </Form>
       <ul>{comments.map((comment,index) => <li key={index}>{comment}</li>)}</ul>
     </div>
   )
@@ -176,9 +176,9 @@ const SingleBlog = (props) => {
     <div style={blogStyle} className='single-blog'>
       <h3>{blog.title} by {blog.author}</h3>
       <a href={blog.url}>{blog.url}</a><br/>
-      {blog.likes} likes<button onClick={() => props.likeBlog(blog)}>like</button><br/>
+      {blog.likes} likes<Button onClick={() => props.likeBlog(blog)}>like</Button><br/>
       added by <a href={'/users/'+blog.user.id}>{blog.user.name}</a><br/>
-      {props.user.username === blog.user.username ? <button onClick={() => props.removeBlog(blog.id)}>remove</button> : <></>}
+      {props.user.username === blog.user.username ? <Button onClick={() => props.removeBlog(blog.id)}>remove</Button> : <></>}
       <ConnectedComments id={blog.id} comments={blog.comments}/>
     </div>
   )
@@ -196,9 +196,9 @@ const PlainBlog = (props) => {
     <div style={blogStyle} className='plain-blog'>
       <h3><a href={'/blogs/'+blog.id}>{blog.title} by {blog.author}</a></h3>
       <a href={blog.url}>{blog.url}</a><br/>
-      {blog.likes} likes<button onClick={() => props.likeBlog(blog)}>like</button><br/>
+      {blog.likes} likes<Button onClick={() => props.likeBlog(blog)}>like</Button><br/>
       added by <a href={'/users/'+blog.user.id}>{blog.user.name}</a><br/>
-      {props.user.username === blog.user.username ? <button onClick={() => props.removeBlog(blog.id)}>remove</button> : <></>}
+      {props.user.username === blog.user.username ? <Button onClick={() => props.removeBlog(blog.id)}>remove</Button> : <></>}
     </div>
   )
 }

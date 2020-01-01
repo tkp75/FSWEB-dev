@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { Route, Redirect, Link } from 'react-router-dom'
+import { Menu } from 'semantic-ui-react'
 import { initApp, uninitApp } from '../reducers/initReducer'
 import { initBlogs } from '../reducers/blogReducer'
 import { setUser, unsetUser } from '../reducers/loginReducer'
@@ -68,17 +69,27 @@ const Header = (props) => {
   }, [])
 
   return (
-    <div>
-      <Link style={menuStyle} to="/">home</Link>
-      <Link style={menuStyle} to="/blogs">blogs</Link>
-      <Link style={menuStyle} to="/users">users</Link>
-      { // eslint-disable-next-line eqeqeq
-        (props.init == null || props.init.users != true || props.user == null)
-          ?
-          <Link style={menuStyle} to="/logout">login</Link>
-          :
-          <><Link style={menuStyle} to="/logout">logout</Link> <b>{props.user.username}</b> logged in</>
-      }
+    <div className='header'>
+      <Menu inverted>
+        <Menu.Item link>
+          <Link style={menuStyle} to="/">home</Link>
+        </Menu.Item>
+        <Menu.Item link>
+          <Link style={menuStyle} to="/blogs">blogs</Link>
+        </Menu.Item>
+        <Menu.Item link>
+          <Link style={menuStyle} to="/users">users</Link>
+        </Menu.Item>
+        <Menu.Item link>
+          { // eslint-disable-next-line eqeqeq
+            (props.init == null || props.init.users != true || props.user == null)
+              ?
+              <Link style={menuStyle} to="/logout">login</Link>
+              :
+              <><Link style={menuStyle} to="/logout">logout</Link> <b>{props.user.username}</b> logged in</>
+          }
+        </Menu.Item>
+      </Menu>
       <h2>blogs</h2>
       <Notification />
     </div>

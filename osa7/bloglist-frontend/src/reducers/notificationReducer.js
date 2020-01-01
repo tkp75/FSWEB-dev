@@ -1,10 +1,10 @@
 const initialState = null
 
-export const setNotification = (content,level,duration) => {
+export const setNotification = (content,level=0,duration=10) => {
   return async dispatch => {
     dispatch({
       type: 'SHOW',
-      notification: content,
+      message: content,
       level: level
     })
     setTimeout(() => {
@@ -15,7 +15,7 @@ export const setNotification = (content,level,duration) => {
 
 const notificationReducer = (state = initialState, action) => {
   switch (action.type) {
-  case 'SHOW': return action.notification
+  case 'SHOW': return { message: action.message, level: action.level }
   case 'HIDE': return null
   default: return state
   }

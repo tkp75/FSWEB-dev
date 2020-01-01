@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { Container } from 'semantic-ui-react'
 import { TogglableBlogList, ConnectedSingleBlog as SingleBlog, ConnectedPlainBlogList as PlainBlogList } from './components/Blog'
 import { ConnectedHeader as Header, Loading, ConnectedUninit as Uninit, ConnectedProtectedRoute as ProtectedRoute } from './components/Helper'
 import { ConnectedLoginForm as LoginForm } from './components/Login'
@@ -14,7 +15,7 @@ const mapStateToProps = (state) => {
 
 const App = (props) => {
   return (
-    <div className='app'>
+    <Container className='app'>
       <Router>
         <Header/>
         {
@@ -38,7 +39,7 @@ const App = (props) => {
             </div>
         }
       </Router>
-    </div>
+    </Container>
   )
 }
 const ConnectedApp = connect(mapStateToProps)(App)

@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import { Table } from 'semantic-ui-react'
 import { setNotification } from '../reducers/notificationReducer'
 
 const mapStateToProps = (state) => {
@@ -14,7 +15,6 @@ const mapDispatchToProps = {
 
 const User = (props) => {
   const { id } = useParams()
-  console.log('User id: ',id)
   let user = null
   // eslint-disable-next-line eqeqeq
   if(props.user != null) user=props.user
@@ -44,16 +44,16 @@ const UserList = (props) => {
   return (
     <div className='user-list' >
       <h3>Users</h3>
-      <table >
-        <thead>
-          <tr><th></th><th>blogs created</th></tr>
-        </thead>
-        <tbody>
+      <Table striped celled >
+        <Table.Header>
+          <Table.Row><Table.HeaderCell></Table.HeaderCell><Table.HeaderCell>blogs created</Table.HeaderCell></Table.Row>
+        </Table.Header>
+        <Table.Body>
           {props.users.sort((a,b) => a.name.localeCompare(b.name)).map((user) => (
-            <tr key={user.id} ><td><a href={'/users/'+user.id} >{user.name}</a></td><td>{user.blogs.length}</td></tr>
+            <Table.Row key={user.id} ><Table.Cell><a href={'/users/'+user.id} >{user.name}</a></Table.Cell><Table.Cell>{user.blogs.length}</Table.Cell></Table.Row>
           ))}
-        </tbody>
-      </table>
+        </Table.Body>
+      </Table>
     </div>
   )
 }

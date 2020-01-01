@@ -1,51 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-
-const Notification = (props) => {
-  const styleList = [
-    { // INFO
-      padding: 10,
-      marginBottom: 10,
-      borderStyle: 'solid',
-      borderRadius: 5,
-      background: 'lightgrey',
-      color: 'darkgreen',
-      fontStyle: 'normal',
-      fontSize: 20
-    },
-    { // WARN
-      padding: 10,
-      marginBottom: 10,
-      borderStyle: 'solid',
-      borderRadius: 5,
-      background: 'grey',
-      color: 'blue',
-      fontStyle: 'italics',
-      fontSize: 20
-    },
-    { // ERROR
-      padding: 10,
-      marginBottom: 10,
-      borderStyle: 'solid',
-      borderRadius: 5,
-      background: 'darkblue',
-      color: 'salmon',
-      fontStyle: 'bold',
-      fontSize: 20
-    }
-  ]
-  if (props.notification === null || props.notification.level < 0 || props.notification.level >= styleList.length) {
-    return (
-      <div className="notification">
-      </div>
-    )
-  }
-  return (
-    <div className="notification" style={styleList[props.notification.level]}>
-      {props.notification}
-    </div>
-  )
-}
+import { Message } from 'semantic-ui-react'
 
 const mapStateToProps = (state) => {
   return {
@@ -53,5 +8,27 @@ const mapStateToProps = (state) => {
   }
 }
 
+const Notification = (props) => {
+  const notification = props.notification || { message: '', level: -1 }
+  let mstyle=null
+  switch(notification.level) {
+  case -1: mstyle = { hidden: true }
+    break
+  case 0:  mstyle = { info: true }
+    break
+  case 1:  mstyle = { warning: true }
+    break
+  case 2:  mstyle = { error: true }
+    break
+  default: mstyle = { visible: true }
+  }
+  return (
+    <div className="notification">
+      <Message {...mstyle}>
+        {notification.message}
+      </Message>
+    </div>
+  )
+}
 const ConnectedNotification = connect(mapStateToProps)(Notification)
 export default ConnectedNotification

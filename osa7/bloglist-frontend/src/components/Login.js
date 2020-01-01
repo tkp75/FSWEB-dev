@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useField } from '../hooks'
+import { Form, Button } from 'semantic-ui-react'
 import { initApp, uninitApp } from '../reducers/initReducer'
 import { setUser, unsetUser } from '../reducers/loginReducer'
 import { setNotification } from '../reducers/notificationReducer'
@@ -66,17 +67,17 @@ const LoginForm = (props) => {
   return (
     <div>
       <h3>Log in</h3>
-      <form className='login-form'>
-        <div>
-        username <input {...user} />
-        </div>
-        <div>
-        password <input {...pass} />
-        </div>
-        <div>
-          <button type="submit" onClick={loginClickHandler} name="Login">login</button>
-        </div>
-      </form>
+      <Form className='login-form'>
+        <Form.Field>
+          <label>username</label>
+          <input {...user} />
+        </Form.Field>
+        <Form.Field>
+          <label>password</label>
+          <input {...pass} />
+        </Form.Field>
+        <Button type="submit" onClick={loginClickHandler} name="Login">login</Button>
+      </Form>
     </div>
   )
 }
