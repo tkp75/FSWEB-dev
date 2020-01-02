@@ -76,7 +76,7 @@ const LoginForm = (props) => {
           <label>password</label>
           <input {...pass} />
         </Form.Field>
-        <Button type="submit" onClick={loginClickHandler} name="Login">login</Button>
+        <Button primary type="submit" onClick={loginClickHandler} name="Login">login</Button>
       </Form>
     </div>
   )

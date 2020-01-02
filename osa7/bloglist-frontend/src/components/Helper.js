@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { Route, Redirect, Link } from 'react-router-dom'
-import { Menu } from 'semantic-ui-react'
+import { Menu, Message, Icon } from 'semantic-ui-react'
 import { initApp, uninitApp } from '../reducers/initReducer'
 import { initBlogs } from '../reducers/blogReducer'
 import { setUser, unsetUser } from '../reducers/loginReducer'
@@ -70,7 +70,7 @@ const Header = (props) => {
 
   return (
     <div className='header'>
-      <Menu inverted>
+      <Menu inverted stackable>
         <Menu.Item link>
           <Link style={menuStyle} to="/">home</Link>
         </Menu.Item>
@@ -86,9 +86,23 @@ const Header = (props) => {
               ?
               <Link style={menuStyle} to="/logout">login</Link>
               :
-              <><Link style={menuStyle} to="/logout">logout</Link> <b>{props.user.username}</b> logged in</>
+              <Link style={menuStyle} to="/logout">logout</Link>
           }
         </Menu.Item>
+        <Menu.Menu position='right'>
+          <Menu.Item link disabled={
+          // eslint-disable-next-line eqeqeq
+            (props.init == null || props.init.users != true || props.user == null)}
+          >
+            { // eslint-disable-next-line eqeqeq
+              (props.init == null || props.init.users != true || props.user == null)
+                ?
+                <Icon color='red' name='user secret'></Icon>
+                :
+                <Link to={'/users/'+props.user.id}><b>{props.user.username}</b> logged in</Link>
+            }
+          </Menu.Item>
+        </Menu.Menu>
       </Menu>
       <h2>blogs</h2>
       <Notification />
@@ -98,11 +112,10 @@ const Header = (props) => {
 export const ConnectedHeader = connect(mapStateToProps,mapDispatchToProps)(Header)
 
 export const Loading = () => (
-  <div>
-    <p>No user data found (yet)...
-      Please wait data to load, login or refresh.
-    </p>
-  </div>
+  <Message>
+    <Message.Header>No user data found (yet)...</Message.Header>
+    <Message.Content>Please wait data to load, <Link to='/logout'>login</Link> or refresh.</Message.Content>
+  </Message>
 )
 
 const Uninit = (props) => {

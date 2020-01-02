@@ -23,11 +23,9 @@ const Notification = (props) => {
   default: mstyle = { visible: true }
   }
   return (
-    <div className="notification">
-      <Message {...mstyle}>
-        {notification.message}
-      </Message>
-    </div>
+    <Message {...mstyle}>
+      {notification.message}
+    </Message>
   )
 }
 const ConnectedNotification = connect(mapStateToProps)(Notification)

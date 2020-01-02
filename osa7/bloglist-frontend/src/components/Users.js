@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { Table } from 'semantic-ui-react'
+import { Table, List } from 'semantic-ui-react'
 import { setNotification } from '../reducers/notificationReducer'
 
 const mapStateToProps = (state) => {
@@ -28,11 +28,11 @@ const User = (props) => {
     <div className='user'>
       <h3>{user.name}</h3>
       <h4>added blogs</h4>
-      <ul>
+      <List>
         {user.blogs.sort((a,b) => b.likes - a.likes).map((blog) => (
-          <li key={blog.id}><a href={'/blogs/'+blog.id} >{blog.title}</a></li>
+          <List.Item key={blog.id}><a href={'/blogs/'+blog.id} >{blog.title}</a></List.Item>
         ))}
-      </ul>
+      </List>
     </div>
   )
 }
@@ -44,9 +44,9 @@ const UserList = (props) => {
   return (
     <div className='user-list' >
       <h3>Users</h3>
-      <Table striped celled >
+      <Table basic='very' celled collapsing>
         <Table.Header>
-          <Table.Row><Table.HeaderCell></Table.HeaderCell><Table.HeaderCell>blogs created</Table.HeaderCell></Table.Row>
+          <Table.Row><Table.HeaderCell>user</Table.HeaderCell><Table.HeaderCell>blogs created</Table.HeaderCell></Table.Row>
         </Table.Header>
         <Table.Body>
           {props.users.sort((a,b) => a.name.localeCompare(b.name)).map((user) => (

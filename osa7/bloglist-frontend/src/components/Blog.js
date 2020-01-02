@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useField } from '../hooks'
-import { Form, Button } from 'semantic-ui-react'
+import { List, Form, Button, Icon, Label } from 'semantic-ui-react'
 import Togglable from '../components/Togglable'
 import { createBlog, likeBlog, removeBlog, toggleBlog, createComment } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
@@ -23,14 +23,6 @@ const mapDispatchToProps = {
   setNotification,
 }
 
-const blogStyle = {
-  paddingTop: 10,
-  paddingLeft: 2,
-  border: 'solid',
-  borderWidth: 1,
-  marginBottom: 5
-}
-
 const blogFormRef = React.createRef()
 
 const dropReset = (obj) => {
@@ -39,36 +31,48 @@ const dropReset = (obj) => {
   return newObj
 }
 
+const LikeButton = (props) => (
+  <Button  compact as='div' labelPosition='right' onClick={() => props.likeBlog(props.blog)}>
+    <Button icon><Icon color='red' name='heart' />like</Button>
+    <Label as='a' basic pointing='left'>{props.blog.likes}</Label>
+  </Button>
+)
+const ConnectedLikeButton = connect(mapStateToProps,mapDispatchToProps)(LikeButton)
+
 const Blog = (props) => {
   const blog = props.blog
   const showFull = { display: blog.full ? '' : 'none' }
   return (
-    <>
-      <div onClick={() => props.toggleBlog(blog)}>
-        {blog.title} {blog.author}
-      </div>
-      <div className='blog-details' style={showFull}>
-        <a href={blog.url}>{blog.url}</a><br/>
-        {blog.likes} likes<Button onClick={() => props.likeBlog(blog)}>like</Button><br/>
-        added by {blog.user.name}
-      </div>
-    </>
+    <List.Content>
+      <List.Header>
+        <div onClick={() => props.toggleBlog(blog)}>
+          {blog.title} {blog.author}
+        </div>
+      </List.Header>
+      <List.Description>
+        <div style={showFull}>
+          <a href={blog.url}>{blog.url}</a><br/>
+          <ConnectedLikeButton blog={blog}/>
+          added by {blog.user.name}
+        </div>
+      </List.Description>
+      {props.user.username === blog.user.username ? <Button compact negative onClick={() => props.removeBlog(blog.id)}>remove</Button> : <></>}
+    </List.Content>
   )
 }
 const ConnectedBlog = connect(mapStateToProps,mapDispatchToProps)(Blog)
 
 const BlogList = (props) => {
   // eslint-disable-next-line eqeqeq
-  if (props.blogs == null) return <div className='blog-list'></div>
+  if (props.blogs == null) return <></>
   return (
-    <div className='blog-list'>
-      {props.blogs.sort((a,b) => b.likes - a.likes).map((blog) => { return (
-        <div key={blog.id} style={blogStyle} className='blog'>
+    <List divided relaxed>
+      {props.blogs.sort((a,b) => b.likes - a.likes).map((blog) => (
+        <List.Item key={blog.id}>
           <ConnectedBlog blog={blog} />
-          {props.user.username === blog.user.username ? <Button onClick={() => props.removeBlog(blog.id)}>remove</Button> : <></>}
-        </div>
-      )})}
-    </div>
+        </List.Item>
+      ))}
+    </List>
   )
 }
 BlogList.propTypes = {
@@ -114,7 +118,7 @@ const CreateBlog = (props) => {
           <label>url</label>
           <input {...inUrl}/>
         </Form.Field>
-        <Button type="submit" onClick={handleClick} name="Create">create</Button>
+        <Button primary type="submit" onClick={handleClick} name="Create">create</Button>
       </Form>
     </div>
   )
@@ -152,13 +156,15 @@ const Comments = (props) => {
   return (
     <div className='comments'>
       <h3>Comments</h3>
-      <Form className='comment-create'>
-        <Form.Field>
-          <input {...inNewComment}/>
-        </Form.Field>
-        <Button type="submit" onClick={handleClick} name="Create">create</Button>
+      <Form>
+        <Form.Group>
+          <Form.Field>
+            <input {...inNewComment}/>
+          </Form.Field>
+          <Button primary type="submit" onClick={handleClick} name="Create">create</Button>
+        </Form.Group>
       </Form>
-      <ul>{comments.map((comment,index) => <li key={index}>{comment}</li>)}</ul>
+      <List celled bulleted>{comments.map((comment,index) => <List.Item key={index}>{comment}</List.Item>)}</List>
     </div>
   )
 }
@@ -173,12 +179,12 @@ const SingleBlog = (props) => {
     return <div className='single-blog'></div>
   }
   return (
-    <div style={blogStyle} className='single-blog'>
+    <div className='single-blog'>
       <h3>{blog.title} by {blog.author}</h3>
       <a href={blog.url}>{blog.url}</a><br/>
-      {blog.likes} likes<Button onClick={() => props.likeBlog(blog)}>like</Button><br/>
+      <ConnectedLikeButton blog={blog}/>
       added by <a href={'/users/'+blog.user.id}>{blog.user.name}</a><br/>
-      {props.user.username === blog.user.username ? <Button onClick={() => props.removeBlog(blog.id)}>remove</Button> : <></>}
+      {props.user.username === blog.user.username ? <Button compact negative onClick={() => props.removeBlog(blog.id)}>remove</Button> : <></>}
       <ConnectedComments id={blog.id} comments={blog.comments}/>
     </div>
   )
@@ -190,15 +196,21 @@ const PlainBlog = (props) => {
   // eslint-disable-next-line eqeqeq
   if(blog == null) {
     props.setNotification('ERROR: No blog found', 2, 15)
-    return <div className='plain-blog'></div>
+    return <></>
   }
   return (
-    <div style={blogStyle} className='plain-blog'>
-      <h3><a href={'/blogs/'+blog.id}>{blog.title} by {blog.author}</a></h3>
-      <a href={blog.url}>{blog.url}</a><br/>
-      {blog.likes} likes<Button onClick={() => props.likeBlog(blog)}>like</Button><br/>
-      added by <a href={'/users/'+blog.user.id}>{blog.user.name}</a><br/>
-      {props.user.username === blog.user.username ? <Button onClick={() => props.removeBlog(blog.id)}>remove</Button> : <></>}
+    <div>
+      <List.Header>
+        <h3><a href={'/blogs/'+blog.id}>{blog.title} by {blog.author}</a></h3>
+      </List.Header>
+      <List.Description>
+        <a href={blog.url}>{blog.url}</a>
+      </List.Description>
+      <List.Content>
+        <ConnectedLikeButton blog={blog}/>
+        added by <a href={'/users/'+blog.user.id}>{blog.user.name}</a><br/>
+        {props.user.username === blog.user.username ? <Button compact negative onClick={() => props.removeBlog(blog.id)}>remove</Button> : <></>}
+      </List.Content>
     </div>
   )
 }
@@ -212,7 +224,9 @@ const PlainBlogList = (props) => {
       <Togglable showLabel='new blog' hideLabel='cancel' ref={blogFormRef}>
         <ConnectedCreateBlog />
       </Togglable>
-      {props.blogs.sort((a,b) => b.likes - a.likes).map((blog) => ( <ConnectedPlainBlog key={blog.id} blog={blog} /> ))}
+      <List celled>
+        {props.blogs.sort((a,b) => b.likes - a.likes).map((blog) => ( <List.Item key={blog.id}><ConnectedPlainBlog blog={blog} /></List.Item> ))}
+      </List>
     </div>
   )
 }
