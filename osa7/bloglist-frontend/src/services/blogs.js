@@ -1,5 +1,6 @@
 import axios from 'axios'
-const baseUrl = '/api/blogs'
+// eslint-disable-next-line no-undef
+const baseUrl = (typeof BACKEND_URL === 'undefined') ? '/api/blogs' : BACKEND_URL + '/api/blogs'
 let token = null
 
 const setToken = newToken => {  token = `bearer ${newToken}` }

@@ -1,5 +1,6 @@
 import axios from 'axios'
-const baseUrl = '/api/login'
+// eslint-disable-next-line no-undef
+const baseUrl = (typeof BACKEND_URL === 'undefined') ? '/api/login' : BACKEND_URL + '/api/login'
 
 const login = async credentials => {
   const response = await axios.post(baseUrl, credentials)
