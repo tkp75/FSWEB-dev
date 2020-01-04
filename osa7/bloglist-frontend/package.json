@@ -16,11 +16,12 @@
     "semantic-ui-react": "^0.88.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "eslint": "eslint ."
+    "start":   "react-scripts start",
+    "build":   "react-scripts build",
+    "test":    "react-scripts test",
+    "eject":   "react-scripts eject",
+    "eslint":  "eslint .",
+    "cypress": "cypress open"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -41,6 +42,7 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^4.1.0",
     "@testing-library/react": "^9.3.0",
+    "cypress": "^3.8.1",
     "eslint": "^6.8.0",
     "eslint-plugin-cypress": "^2.8.1",
     "eslint-plugin-jest": "^22.21.0",
