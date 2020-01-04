@@ -39,5 +39,14 @@ describe('Blogs ', function() {
       cy.contains('new blog')
     })
 
+    it('a new blog can be created', function () {
+      cy.contains('new blog').click()
+      cy.get(':nth-child(1) > input').type('Le Tit')
+      cy.get(':nth-child(2) > input').type('Au Thor')
+      cy.get(':nth-child(3) > input').type('https://www.partio.fi/partiomedia/nain-teet-leirinkestavat-letit/')
+      cy.get('.form > .ui').click()
+      cy.contains('blog saved')
+    })
+
   })
 })
