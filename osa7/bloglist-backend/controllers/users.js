@@ -17,7 +17,7 @@ usersRouter.get('/:id', async(request, response, next) => {
     const user = await User
       .findById(request.params.id)
       .populate('blogs', { title: 1, author: 1, url: 1, likes: 1 })
-    response.json(user.toJSON())
+    if(user) { response.json(user.toJSON()) } else { response.json({}) }
   } catch (exception) {
     next(exception)
   }
