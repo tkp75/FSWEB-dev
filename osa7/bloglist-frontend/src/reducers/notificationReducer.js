@@ -13,10 +13,16 @@ export const setNotification = (content,level=0,duration=10) => {
   }
 }
 
+export const unsetNotification = () => (
+  {
+    type: 'HIDE',
+  }
+)
+
 const notificationReducer = (state = initialState, action) => {
   switch (action.type) {
   case 'SHOW': return { message: action.message, level: action.level }
-  case 'HIDE': return null
+  case 'HIDE': return initialState
   default: return state
   }
 }

@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { Table, List } from 'semantic-ui-react'
 import { setNotification } from '../reducers/notificationReducer'
 
@@ -30,7 +30,7 @@ const User = (props) => {
       <h4>added blogs</h4>
       <List>
         {user.blogs.sort((a,b) => b.likes - a.likes).map((blog) => (
-          <List.Item key={blog.id}><a href={'/blogs/'+blog.id} >{blog.title}</a></List.Item>
+          <List.Item key={blog.id}><Link to={'/blogs/'+blog.id} >{blog.title}</Link></List.Item>
         ))}
       </List>
     </div>
@@ -50,7 +50,7 @@ const UserList = (props) => {
         </Table.Header>
         <Table.Body>
           {props.users.sort((a,b) => a.name.localeCompare(b.name)).map((user) => (
-            <Table.Row key={user.id} ><Table.Cell><a href={'/users/'+user.id} >{user.name}</a></Table.Cell><Table.Cell>{user.blogs.length}</Table.Cell></Table.Row>
+            <Table.Row key={user.id} ><Table.Cell><Link to={'/users/'+user.id}>{user.name}</Link></Table.Cell><Table.Cell>{user.blogs.length}</Table.Cell></Table.Row>
           ))}
         </Table.Body>
       </Table>

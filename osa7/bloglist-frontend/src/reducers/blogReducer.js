@@ -12,6 +12,12 @@ export const initBlogs = () => {
   }
 }
 
+export const uninitBlogs = () => (
+  {
+    type: 'UNINIT_BLOGS',
+  }
+)
+
 export const createBlog = (blog, user) => {
   return async dispatch => {
     const newBlog = await blogService.create(blog)
@@ -61,7 +67,7 @@ export const toggleBlog = (blog) => {
   }
 }
 
-export const createComment = ( comment, id) => {
+export const createComment = (comment, id) => {
   const commentObj = {
     comment: comment
   }
@@ -79,6 +85,8 @@ const blogReducer = (state = initialState, action) => {
   switch(action.type) {
   case 'INIT_BLOGS':
     return action.data
+  case 'UNINIT_BLOGS':
+    return initialState
   case 'CREATE':
     return state.concat(action.data)
   case 'REMOVE':

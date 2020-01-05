@@ -12,9 +12,9 @@ const render = () => {
     document.getElementById('root')
   )
 }
-
 render()
 store.subscribe(render)
+
 /*
 store.subscribe(() => {
   const storeNow = store.getState()

@@ -1,10 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useLocation, useHistory } from 'react-router-dom'
 import { useField } from '../hooks'
 import { Form, Button } from 'semantic-ui-react'
+import { initUsers } from '../reducers/userReducer'
+import { initBlogs } from '../reducers/blogReducer'
 import { initApp, uninitApp } from '../reducers/initReducer'
-import { setUser, unsetUser } from '../reducers/loginReducer'
+import { setUser, unsetUser, forwardUser } from '../reducers/loginReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import loginService from '../services/login'
 
@@ -12,9 +14,6 @@ const mapStateToProps = (state) => {
   return {
     user: state.login,
     init: state.init,
-    /*
-    blogs: state.blogs,
-    */
   }
 }
 const mapDispatchToProps = {
@@ -22,6 +21,9 @@ const mapDispatchToProps = {
   uninitApp,
   setUser,
   unsetUser,
+  forwardUser,
+  initUsers,
+  initBlogs,
   setNotification,
 }
 
@@ -44,6 +46,7 @@ const LoginForm = (props) => {
     event.preventDefault()
     if (!username.value || !password.value) {
       props.setNotification('WARNING: missing username or password', 1, 10)
+      props.uninitApp('login')
       props.unsetUser()
       return
     }
@@ -51,16 +54,24 @@ const LoginForm = (props) => {
       const loginResponse = await loginService.login({ username: username.value, password: password.value })
       if (!loginResponse || !loginResponse.token) {
         props.setNotification('ERROR: invalid username or password', 2, 15)
+        props.uninitApp('login')
+        props.unsetUser()
         return
       }
       username.reset()
       password.reset()
+      props.initUsers()
+      props.initApp('users')
+      props.initBlogs()
+      props.initApp('blogs')
       props.setUser(loginResponse)
       props.initApp('login')
-      history.replace(from)
+      props.forwardUser(history, from, 'replace')
     } catch (exception) {
       console.log('ERROR: login failed\n',exception)
       props.setNotification(`ERROR: login failed\n${exception}`, 2, 15)
+      props.uninitApp('login')
+      props.unsetUser()
     }
   }
 

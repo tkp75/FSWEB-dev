@@ -12,10 +12,18 @@ export const initUsers = () => {
   }
 }
 
+export const uninitUsers = () => (
+  {
+    type: 'UNINIT_USERS',
+  }
+)
+
 const userReducer = (state = initialState, action) => {
   switch(action.type) {
   case 'INIT_USERS':
     return action.data
+  case 'UNINIT_USERS':
+    return initialState
   default:
     return state
   }

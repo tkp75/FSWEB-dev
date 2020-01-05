@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useField } from '../hooks'
 import { List, Form, Button, Icon, Label } from 'semantic-ui-react'
@@ -42,6 +42,8 @@ const ConnectedLikeButton = connect(mapStateToProps,mapDispatchToProps)(LikeButt
 const Blog = (props) => {
   const blog = props.blog
   const showFull = { display: blog.full ? '' : 'none' }
+  // eslint-disable-next-line eqeqeq
+  if(blog.user == null) blog.user = { name: 'unknown', username: 'unknown', id: '000000000000000000000000' }
   return (
     <List.Content>
       <List.Header>
@@ -51,7 +53,7 @@ const Blog = (props) => {
       </List.Header>
       <List.Description>
         <div style={showFull}>
-          <a href={blog.url}>{blog.url}</a><br/>
+          <Link to={blog.url}>{blog.url}</Link><br/>
           <ConnectedLikeButton blog={blog}/>
           added by {blog.user.name}
         </div>
@@ -181,9 +183,9 @@ const SingleBlog = (props) => {
   return (
     <div className='single-blog'>
       <h3>{blog.title} by {blog.author}</h3>
-      <a href={blog.url}>{blog.url}</a><br/>
+      <Link to={blog.url}>{blog.url}</Link><br/>
       <ConnectedLikeButton blog={blog}/>
-      added by <a href={'/users/'+blog.user.id}>{blog.user.name}</a><br/>
+      added by <Link to={'/users/'+blog.user.id}>{blog.user.name}</Link><br/>
       {props.user.username === blog.user.username ? <Button compact negative onClick={() => props.removeBlog(blog.id)}>remove</Button> : <></>}
       <ConnectedComments id={blog.id} comments={blog.comments}/>
     </div>
@@ -194,21 +196,23 @@ export const ConnectedSingleBlog = connect(mapStateToProps,mapDispatchToProps)(S
 const PlainBlog = (props) => {
   const blog = props.blog
   // eslint-disable-next-line eqeqeq
-  if(blog == null) {
+  if(blog == null ) {
     props.setNotification('ERROR: No blog found', 2, 15)
     return <></>
   }
+  // eslint-disable-next-line eqeqeq
+  if(blog.user == null) blog.user = { name: 'unknown', username: 'unknown', id: '000000000000000000000000' }
   return (
     <div>
       <List.Header>
-        <h3><a href={'/blogs/'+blog.id}>{blog.title} by {blog.author}</a></h3>
+        <h3><Link to={'/blogs/'+blog.id}>{blog.title} by {blog.author}</Link></h3>
       </List.Header>
       <List.Description>
         <a href={blog.url}>{blog.url}</a>
       </List.Description>
       <List.Content>
         <ConnectedLikeButton blog={blog}/>
-        added by <a href={'/users/'+blog.user.id}>{blog.user.name}</a><br/>
+        added by <Link to={'/users/'+blog.user.id}>{blog.user.name}</Link><br/>
         {props.user.username === blog.user.username ? <Button compact negative onClick={() => props.removeBlog(blog.id)}>remove</Button> : <></>}
       </List.Content>
     </div>
